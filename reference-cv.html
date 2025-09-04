@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khalil Ullah Naul</title>
+    <!-- Google Fonts - Montserrat Black -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Jameel Noori Nastaleeq';
+            src: url('https://fonts.cdnfonts.com/s/33891/Jameel-Noori-Nastaleeq-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap; /* Add this to prevent FOIT (Flash of Invisible Text) */
+        }
+        
+        :root {
+            --sidebar-width: 300px;
+            --primary-color: #3b82f6;
+            --highlight-color: #FFD700;
+            --text-color: #ffffff;
+            --highlight-padding-vertical: 0px;
+            --highlight-padding-horizontal: 4px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            z-index: 100;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .panel {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+        
+        .btn-icon {
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .range-slider {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+        
+        .range-slider input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #d1d5db;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .range-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .range-value {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 4/5;
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        #poster-canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .gradient-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 45%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+            transition: all 0.3s ease;
+        }
+        
+        .logo-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
+            transition: all 0.3s ease;
+            display: none;
+        }
+        
+        .text-area {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            width: 90%;
+            max-height: 40%;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        
+        .text-area.urdu {
+            font-family: 'Jameel Noori Nastaleeq', serif;
+            font-weight: normal;
+            text-transform: none;
+            text-align: right;
+            direction: rtl;
+            right: 5%;
+            left: auto;
+        }
+        
+        .text-line {
+            display: inline-block;
+            margin-bottom: 0.25rem;
+            font-size: 2.5rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+        
+        .text-line.urdu {
+            font-size: 2.2rem;
+            letter-spacing: 0;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            background-color: var(--highlight-color);
+            color: black;
+            padding: var(--highlight-padding-vertical) var(--highlight-padding-horizontal);
+            display: inline-block;
+            line-height: 1;
+        }
+        
+        .highlight.urdu {
+            line-height: 1.5;
+        }
+        
+        .logo-container {
+            position: absolute;
+            top: 3%;
+            left: 3%;
+            max-width: 25%;
+            max-height: 15%;
+            z-index: 10;
+        }
+        
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+        
+        .color-picker {
+            height: 30px;
+            width: 30px;
+            border: none;
+            padding: 0;
+            border-radius: 4px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .color-picker::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        
+        .color-picker::-webkit-color-swatch {
+            border: none;
+            border-radius: 4px;
+        }
+        
+        .color-preview {
+            height: 30px;
+            width: 40px;
+            border-radius: 4px;
+            border: 1px solid #d1d5db;
+        }
+        
+        .color-value {
+            font-size: 0.75rem;
+            color: #6b7280;
+            flex: 1;
+        }
+        
+        .direction-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .direction-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .direction-option.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .text-editor {
+            margin-top: 1rem;
+        }
+        
+        .word-chip {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            margin: 0.25rem;
+            background: #f3f4f6;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        
+        .word-chip.highlighted {
+            background: var(--highlight-color);
+        }
+        
+        @media (max-width: 1024px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 1rem;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Hidden during font loading */
+        .text-area.urdu {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .text-area.urdu.loaded {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Controls -->
+        <div class="sidebar">
+            <h1>Pakkay Wala Post Maker by Khalil Ullah Naul</h1>
+            
+            <div class="panel">
+                <div class="section-title">Background</div>
+                <div class="input-group">
+                    <label class="input-label" for="bg-upload">Upload Image</label>
+                    <input type="file" id="bg-upload" accept="image/*" class="input-field">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="blur-range">Blur</label>
+                    <div class="range-slider">
+                        <input type="range" id="blur-range" min="0" max="10" value="0" step="0.5">
+                        <div class="range-value">
+                            <span>0</span>
+                            <span>10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="section-title">Overlay Gradient</div>
+                <div class="input-group">
+                    <label class="input-label">Gradient Color</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="gradient-color-picker" class="color-picker" value="#000000">
+                        <div id="gradient-color-preview" class="color-preview" style="background-color: #000000;"></div>
+                        <div id="gradient-color-value" class="color-value">#000000</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="opacity-range">Opacity</label>
+                    <div class="range-slider">
+                        <input type="range" id="opacity-range" min="0" max="100" value="80" step="5">
+                        <div class="range-value">
+                            <span>0%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="height-range">Height</label>
+                    <div class="range-slider">
+                        <input type="range" id="height-range" min="20" max="100" value="45" step="5">
+                        <div class="range-value">
+                            <span>20%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Logo Background Gradient</label>
+                    <div class="toggle-container">
+                        <span>Off</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="logo-gradient-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>On</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="section-title">Text</div>
+                <div class="input-group">
+                    <label class="input-label" for="text-input">Enter Text</label>
+                    <textarea id="text-input" class="input-field" rows="4" placeholder="Enter your text here..."></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Language</label>
+                    <div class="toggle-container">
+                        <span>English</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="language-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>Urdu</span>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="font-size-range">Font Size</label>
+                    <div class="range-slider">
+                        <input type="range" id="font-size-range" min="1" max="5" value="2.5" step="0.1">
+                        <div class="range-value">
+                            <span>Small</span>
+                            <span>Large</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="line-spacing-range">Line Spacing</label>
+                    <div class="range-slider">
+                        <input type="range" id="line-spacing-range" min="0.8" max="2" value="1.2" step="0.1">
+                        <div class="range-value">
+                            <span>Tight</span>
+                            <span>Loose</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Text Color</label>
+                    <div class="color-picker-container">
+                        <input type="color" id="text-color-picker" class="color-picker" value="#ffffff">
+                        <div id="text-color-preview" class="color-preview" style="background-color: #ffffff;"></div>
+                        <div id="text-color-value" class="color-value">#ffffff</div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Highlight Words</label>
+                    <div id="text-words" class="text-editor">
+                        <!-- Words will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Highlight Settings</label>
+                    <div class="input-group">
+                        <label class="input-label" for="highlight-padding-range">Highlight Width</label>
+                        <div class="range-slider">
+                            <input type="range" id="highlight-padding-range" min="0" max="10" value="4" step="1">
+                            <div class="range-value">
+                                <span>0px</span>
+                                <span>10px</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label">Highlight Color</label>
+                        <div class="color-picker-container">
+                            <input type="color" id="highlight-color-picker" class="color-picker" value="#FFD700">
+                            <div id="highlight-color-preview" class="color-preview" style="background-color: #FFD700;"></div>
+                            <div id="highlight-color-value" class="color-value">#FFD700</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="section-title">Logo</div>
+                <div class="input-group">
+                    <label class="input-label" for="logo-upload">Upload Logo</label>
+                    <input type="file" id="logo-upload" accept="image/*" class="input-field">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Position</label>
+                    <div class="direction-selector">
+                        <div class="direction-option active" data-logo-position="top-left">
+                            <i class="fas fa-arrow-up-left"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="top-right">
+                            <i class="fas fa-arrow-up-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="section-title">Export</div>
+                <button id="download-btn" class="btn btn-primary">
+                    <i class="fas fa-download btn-icon"></i> Download Poster
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Content / Canvas -->
+        <div class="main-content">
+            <div class="canvas-container">
+                <div id="poster-canvas">
+                    <div class="gradient-overlay"></div>
+                    <div class="logo-gradient"></div>
+                    <div class="text-area"></div>
+                    <div class="logo-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Preload Jameel Noori Nastaleeq font
+            const fontLoader = new FontFace(
+                'Jameel Noori Nastaleeq', 
+                'url(https://fonts.cdnfonts.com/s/33891/Jameel-Noori-Nastaleeq-Regular.woff)',
+                { style: 'normal', weight: 'normal' }
+            );
+            
+            // Add font to document fonts collection
+            fontLoader.load().then(function(loadedFont) {
+                document.fonts.add(loadedFont);
+                console.log('Jameel Noori Nastaleeq font loaded successfully');
+                
+                // Mark Urdu text areas as loaded once font is available
+                document.querySelectorAll('.text-area.urdu').forEach(el => el.classList.add('loaded'));
+                
+                // Trigger a canvas update when the font is loaded
+                if (state.isUrdu) {
+                    updateCanvas();
+                }
+            }).catch(function(err) {
+                console.error('Error loading Jameel Noori Nastaleeq font:', err);
+                // Fall back to system fonts for Urdu
+                document.documentElement.style.setProperty('--urdu-font', '"Urdu Typesetting", "Alvi Nastaleeq", "Nafees", Arial, sans-serif');
+            });
+            
+            // Get DOM elements
+            const posterCanvas = document.getElementById('poster-canvas');
+            const gradientOverlay = document.querySelector('.gradient-overlay');
+            const logoGradient = document.querySelector('.logo-gradient');
+            const textArea = document.querySelector('.text-area');
+            const logoContainer = document.querySelector('.logo-container');
+            
+            // Input controls
+            const bgUpload = document.getElementById('bg-upload');
+            const textInput = document.getElementById('text-input');
+            const fontSizeRange = document.getElementById('font-size-range');
+            const lineSpacingRange = document.getElementById('line-spacing-range');
+            const opacityRange = document.getElementById('opacity-range');
+            const heightRange = document.getElementById('height-range');
+            const blurRange = document.getElementById('blur-range');
+            const logoUpload = document.getElementById('logo-upload');
+            const downloadBtn = document.getElementById('download-btn');
+            const logoPositionOptions = document.querySelectorAll('.direction-option[data-logo-position]');
+            const textWords = document.getElementById('text-words');
+            const logoGradientToggle = document.getElementById('logo-gradient-toggle');
+            const highlightPaddingRange = document.getElementById('highlight-padding-range');
+            const languageToggle = document.getElementById('language-toggle');
+            
+            // Color pickers
+            const gradientColorPicker = document.getElementById('gradient-color-picker');
+            const gradientColorPreview = document.getElementById('gradient-color-preview');
+            const gradientColorValue = document.getElementById('gradient-color-value');
+            const highlightColorPicker = document.getElementById('highlight-color-picker');
+            const highlightColorPreview = document.getElementById('highlight-color-preview');
+            const highlightColorValue = document.getElementById('highlight-color-value');
+            const textColorPicker = document.getElementById('text-color-picker');
+            const textColorPreview = document.getElementById('text-color-preview');
+            const textColorValue = document.getElementById('text-color-value');
+            
+            // State
+            let state = {
+                backgroundImage: null,
+                textContent: '',
+                fontSize: 2.5,
+                lineSpacing: 1.2,
+                opacity: 80,
+                height: 45,
+                blur: 0,
+                gradientColor: '#000000',
+                logoPosition: 'top-left',
+                logoGradient: false,
+                highlightedWords: new Set(),
+                highlightPadding: 4,
+                highlightColor: '#FFD700',
+                textColor: '#ffffff',
+                isUrdu: false
+            };
+            
+            // Helper function to convert hex to rgba
+            function hexToRgba(hex, opacity) {
+                // Remove the hash if it's there
+                hex = hex.replace('#', '');
+                
+                // Parse the hex values
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+                
+                // Return rgba string
+                return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            }
+            
+            // Functions
+            function updateCanvas() {
+                // Background image
+                if (state.backgroundImage) {
+                    posterCanvas.style.backgroundImage = `url('${state.backgroundImage}')`;
+                }
+                
+                // Blur filter
+                posterCanvas.style.filter = `blur(${state.blur}px)`;
+                
+                // Gradient overlay - now using hexToRgba helper for color conversion
+                const overlayColor = hexToRgba(state.gradientColor, state.opacity / 100);
+                gradientOverlay.style.background = `linear-gradient(to top, ${overlayColor}, rgba(0, 0, 0, 0))`;
+                gradientOverlay.style.height = `${state.height}%`;
+                
+                // Logo gradient - using the same color as main gradient but with fixed opacity
+                const logoOverlayColor = hexToRgba(state.gradientColor, 0.5);
+                logoGradient.style.background = `linear-gradient(to bottom, ${logoOverlayColor}, rgba(0, 0, 0, 0))`;
+                
+                if (state.logoGradient) {
+                    logoGradient.style.display = 'block';
+                } else {
+                    logoGradient.style.display = 'none';
+                }
+                
+                // Update CSS variables for text color, highlight color and styling
+                document.documentElement.style.setProperty('--highlight-color', state.highlightColor);
+                document.documentElement.style.setProperty('--highlight-padding-horizontal', `${state.highlightPadding}px`);
+                document.documentElement.style.setProperty('--highlight-padding-vertical', '0px'); // Keep vertical padding at 0
+                document.documentElement.style.setProperty('--text-color', state.textColor);
+                
+                // Apply text color directly to text area
+                textArea.style.color = state.textColor;
+                
+                // Text content and language
+                if (state.isUrdu) {
+                    textArea.classList.add('urdu');
+                    // Ensure font is fully applied before showing
+                    if (document.fonts.check('1em "Jameel Noori Nastaleeq"')) {
+                        textArea.classList.add('loaded');
+                    }
+                } else {
+                    textArea.classList.remove('urdu');
+                    textArea.classList.remove('loaded');
+                }
+                
+                renderText();
+                
+                // Logo position
+                if (state.logoPosition === 'top-left') {
+                    logoContainer.style.left = '3%';
+                    logoContainer.style.right = 'auto';
+                } else {
+                    logoContainer.style.right = '3%';
+                    logoContainer.style.left = 'auto';
+                }
+            }
+            
+            function renderText() {
+                textArea.innerHTML = '';
+                if (!state.textContent) return;
+                
+                const lines = state.textContent.split('\n');
+                lines.forEach(line => {
+                    if (line.trim() === '') return;
+                    
+                    const lineEl = document.createElement('span');
+                    lineEl.classList.add('text-line');
+                    if (state.isUrdu) lineEl.classList.add('urdu');
+                    
+                    lineEl.style.fontSize = `${state.fontSize}rem`;
+                    lineEl.style.lineHeight = state.lineSpacing;
+                    lineEl.style.marginBottom = `${state.lineSpacing * 0.5}rem`;
+                    
+                    // Process words for highlighting
+                    const words = line.split(' ');
+                    words.forEach((word, index) => {
+                        const wordSpan = document.createElement('span');
+                        if (state.highlightedWords.has(word.toLowerCase())) {
+                            wordSpan.classList.add('highlight');
+                            if (state.isUrdu) wordSpan.classList.add('urdu');
+                        }
+                        wordSpan.textContent = word;
+                        lineEl.appendChild(wordSpan);
+                        
+                        // Add space except after last word
+                        if (index < words.length - 1) {
+                            lineEl.appendChild(document.createTextNode(' '));
+                        }
+                    });
+                    
+                    textArea.appendChild(lineEl);
+                });
+            }
+            
+            function updateWordChips() {
+                textWords.innerHTML = '';
+                if (!state.textContent) return;
+                
+                const words = state.textContent.split(/\s+/)
+                    .filter(word => word.trim() !== '')
+                    .map(word => word.toLowerCase());
+                
+                // Remove duplicates
+                const uniqueWords = [...new Set(words)];
+                
+                uniqueWords.forEach(word => {
+                    const chip = document.createElement('span');
+                    chip.classList.add('word-chip');
+                    if (state.highlightedWords.has(word)) {
+                        chip.classList.add('highlighted');
+                        // Apply highlight color to the chip as well
+                        chip.style.backgroundColor = state.highlightColor;
+                    }
+                    chip.textContent = word;
+                    chip.addEventListener('click', () => {
+                        if (state.highlightedWords.has(word)) {
+                            state.highlightedWords.delete(word);
+                            chip.classList.remove('highlighted');
+                            chip.style.backgroundColor = '';
+                        } else {
+                            state.highlightedWords.add(word);
+                            chip.classList.add('highlighted');
+                            chip.style.backgroundColor = state.highlightColor;
+                        }
+                        updateCanvas();
+                    });
+                    textWords.appendChild(chip);
+                });
+            }
+            
+            // Color picker event listeners
+            gradientColorPicker.addEventListener('input', function(e) {
+                const color = e.target.value;
+                state.gradientColor = color;
+                gradientColorPreview.style.backgroundColor = color;
+                gradientColorValue.textContent = color;
+                updateCanvas();
+            });
+            
+            highlightColorPicker.addEventListener('input', function(e) {
+                const color = e.target.value;
+                state.highlightColor = color;
+                highlightColorPreview.style.backgroundColor = color;
+                highlightColorValue.textContent = color;
+                
+                // Update already highlighted word chips
+                document.querySelectorAll('.word-chip.highlighted').forEach(chip => {
+                    chip.style.backgroundColor = color;
+                });
+                
+                updateCanvas();
+            });
+            
+            textColorPicker.addEventListener('input', function(e) {
+                const color = e.target.value;
+                state.textColor = color;
+                textColorPreview.style.backgroundColor = color;
+                textColorValue.textContent = color;
+                updateCanvas();
+            });
+            
+            // Event listeners
+            bgUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        state.backgroundImage = e.target.result;
+                        updateCanvas();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            textInput.addEventListener('input', function(e) {
+                state.textContent = e.target.value;
+                updateWordChips();
+                updateCanvas();
+            });
+            
+            fontSizeRange.addEventListener('input', function(e) {
+                state.fontSize = parseFloat(e.target.value);
+                updateCanvas();
+            });
+            
+            lineSpacingRange.addEventListener('input', function(e) {
+                state.lineSpacing = parseFloat(e.target.value);
+                updateCanvas();
+            });
+            
+            opacityRange.addEventListener('input', function(e) {
+                state.opacity = parseInt(e.target.value);
+                updateCanvas();
+            });
+            
+            heightRange.addEventListener('input', function(e) {
+                state.height = parseInt(e.target.value);
+                updateCanvas();
+            });
+            
+            blurRange.addEventListener('input', function(e) {
+                state.blur = parseFloat(e.target.value);
+                updateCanvas();
+            });
+            
+            highlightPaddingRange.addEventListener('input', function(e) {
+                state.highlightPadding = parseInt(e.target.value);
+                updateCanvas();
+            });
+            
+            languageToggle.addEventListener('change', function(e) {
+                state.isUrdu = this.checked;
+                updateCanvas();
+            });
+            
+            logoPositionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    logoPositionOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    state.logoPosition = this.dataset.logoPosition;
+                    updateCanvas();
+                });
+            });
+            
+            logoGradientToggle.addEventListener('change', function() {
+                state.logoGradient = this.checked;
+                updateCanvas();
+            });
+            
+            logoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            logoContainer.innerHTML = '';
+                            logoContainer.appendChild(img);
+                        };
+                        img.style.maxWidth = '100%';
+                        img.style.maxHeight = '100%';
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Download functionality - exact replica of what's shown in browser
+            function downloadPoster() {
+                if (!state.backgroundImage) {
+                    alert('Please upload a background image first.');
+                    return;
+                }
+                
+                // Load html2canvas if not already loaded
+                if (typeof html2canvas === 'undefined') {
+                    const script = document.createElement('script');
+                    script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+                    script.onload = function() {
+                        console.log('html2canvas loaded dynamically');
+                        captureAndDownload();
+                    };
+                    document.head.appendChild(script);
+                } else {
+                    captureAndDownload();
+                }
+            }
+            
+            function captureAndDownload() {
+                html2canvas(document.querySelector("#poster-canvas"), {
+                    allowTaint: true,
+                    useCORS: true,
+                    scale: 2, // Higher resolution
+                    backgroundColor: null, // Transparent background
+                    onclone: function(clonedDoc) {
+                        // For the cloned document, make sure fonts are applied
+                        const clonedTextArea = clonedDoc.querySelector('.text-area');
+                        
+                        if (state.isUrdu) {
+                            clonedTextArea.style.fontFamily = "'Jameel Noori Nastaleeq', serif";
+                            clonedTextArea.classList.add('loaded');
+                        }
+                    }
+                }).then(canvas => {
+                    // Add timestamp and username
+                    const ctx = canvas.getContext('2d');
+                    ctx.font = '14px Arial';
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`2025-05-09 12:48:39 - aoun9990`, canvas.width - 10, canvas.height - 10);
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.download = 'political-poster.png';
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                });
+            }
+            
+            // Connect download button
+            downloadBtn.addEventListener('click', downloadPoster);
+            
+            // Include html2canvas library
+            if (!window.html2canvas) {
+                const script = document.createElement('script');
+                script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+                script.onload = function() {
+                    console.log('html2canvas loaded');
+                };
+                document.head.appendChild(script);
+            }
+            
+            // Initialize with default values
+            textInput.value = "I\nlove\nKhalil Ullah";
+            state.textContent = textInput.value;
+            updateWordChips();
+            
+            // Set a default background image
+            state.backgroundImage = 'https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80';
+            
+            // Initial update
+            updateCanvas();
+        });
+    </script>
+</body>
+</html>
