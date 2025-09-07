@@ -268,6 +268,78 @@
             border-color: var(--highlight-color);
         }
         
+        .logo-position-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .social-icons-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        
+        .social-icon-toggle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .social-icon-toggle:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .social-icon-toggle input {
+            margin-bottom: 0.25rem;
+        }
+        
+        .social-icon-toggle i {
+            font-size: 1.5rem;
+            color: #6b7280;
+        }
+        
+        .social-icon-toggle input:checked + i {
+            color: var(--primary-color);
+        }
+        
+        .social-icons-display {
+            position: absolute;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 5;
+        }
+        
+        .social-icons-display.bottom-left {
+            bottom: 3%;
+            left: 3%;
+        }
+        
+        .social-icons-display.bottom-center {
+            bottom: 3%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .social-icons-display.bottom-right {
+            bottom: 3%;
+            right: 3%;
+        }
+        
+        .social-icons-display i {
+            font-size: 1.5rem;
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+        
         #poster-canvas {
             width: 100%;
             height: 100%;
@@ -572,6 +644,51 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="brightness-range">Brightness</label>
+                    <div class="range-slider">
+                        <input type="range" id="brightness-range" min="0" max="200" value="100" step="5">
+                        <div class="range-value">
+                            <span>Dark</span>
+                            <span>Bright</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="contrast-range">Contrast</label>
+                    <div class="range-slider">
+                        <input type="range" id="contrast-range" min="0" max="200" value="100" step="5">
+                        <div class="range-value">
+                            <span>Low</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="saturation-range">Saturation</label>
+                    <div class="range-slider">
+                        <input type="range" id="saturation-range" min="0" max="200" value="100" step="5">
+                        <div class="range-value">
+                            <span>Gray</span>
+                            <span>Vibrant</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Vintage Filter</label>
+                    <div class="toggle-container">
+                        <span>Off</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="vintage-toggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span>On</span>
+                    </div>
+                </div>
             </div>
             
             <div class="panel">
@@ -776,13 +893,96 @@
                 
                 <div class="input-group">
                     <label class="input-label">Position</label>
-                    <div class="direction-selector">
+                    <div class="logo-position-grid">
                         <div class="direction-option active" data-logo-position="top-left">
                             <i class="fas fa-arrow-up-left"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="top-center">
+                            <i class="fas fa-arrow-up"></i>
                         </div>
                         <div class="direction-option" data-logo-position="top-right">
                             <i class="fas fa-arrow-up-right"></i>
                         </div>
+                        <div class="direction-option" data-logo-position="center-left">
+                            <i class="fas fa-arrow-left"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="center">
+                            <i class="fas fa-circle"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="center-right">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="bottom-left">
+                            <i class="fas fa-arrow-down-left"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="bottom-center">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="direction-option" data-logo-position="bottom-right">
+                            <i class="fas fa-arrow-down-right"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="logo-size-range">Logo Size</label>
+                    <div class="range-slider">
+                        <input type="range" id="logo-size-range" min="20" max="200" value="100" step="10">
+                        <div class="range-value">
+                            <span>Small</span>
+                            <span>Large</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label" for="logo-rotation-range">Rotation</label>
+                    <div class="range-slider">
+                        <input type="range" id="logo-rotation-range" min="-180" max="180" value="0" step="5">
+                        <div class="range-value">
+                            <span>-180°</span>
+                            <span>180°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <div class="section-title">Social Icons</div>
+                <div class="input-group">
+                    <label class="input-label">Show Social Icons</label>
+                    <div class="social-icons-container">
+                        <label class="social-icon-toggle">
+                            <input type="checkbox" id="facebook-icon" data-icon="facebook">
+                            <i class="fab fa-facebook"></i>
+                        </label>
+                        <label class="social-icon-toggle">
+                            <input type="checkbox" id="instagram-icon" data-icon="instagram">
+                            <i class="fab fa-instagram"></i>
+                        </label>
+                        <label class="social-icon-toggle">
+                            <input type="checkbox" id="twitter-icon" data-icon="twitter">
+                            <i class="fab fa-twitter"></i>
+                        </label>
+                        <label class="social-icon-toggle">
+                            <input type="checkbox" id="linkedin-icon" data-icon="linkedin">
+                            <i class="fab fa-linkedin"></i>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Social Icons Position</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn alignment-btn active" data-social-position="bottom-left">
+                            <i class="fas fa-arrow-down-left"></i>
+                        </button>
+                        <button class="btn alignment-btn" data-social-position="bottom-center">
+                            <i class="fas fa-arrow-down"></i>
+                        </button>
+                        <button class="btn alignment-btn" data-social-position="bottom-right">
+                            <i class="fas fa-arrow-down-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -863,12 +1063,22 @@
             const opacityRange = document.getElementById('opacity-range');
             const heightRange = document.getElementById('height-range');
             const blurRange = document.getElementById('blur-range');
+            const brightnessRange = document.getElementById('brightness-range');
+            const contrastRange = document.getElementById('contrast-range');
+            const saturationRange = document.getElementById('saturation-range');
+            const vintageToggle = document.getElementById('vintage-toggle');
             const logoUpload = document.getElementById('logo-upload');
+            const logoSizeRange = document.getElementById('logo-size-range');
+            const logoRotationRange = document.getElementById('logo-rotation-range');
             const downloadBtn = document.getElementById('download-btn');
             const logoPositionOptions = document.querySelectorAll('.direction-option[data-logo-position]');
             const textWords = document.getElementById('text-words');
             const logoGradientToggle = document.getElementById('logo-gradient-toggle');
             const highlightPaddingRange = document.getElementById('highlight-padding-range');
+            
+            // Social icons
+            const socialIconCheckboxes = document.querySelectorAll('input[data-icon]');
+            const socialPositionBtns = document.querySelectorAll('[data-social-position]');
             
             // New style controls
             const boldToggle = document.getElementById('bold-toggle');
@@ -900,8 +1110,14 @@
                 opacity: 80,
                 height: 45,
                 blur: 0,
+                brightness: 100,
+                contrast: 100,
+                saturation: 100,
+                vintage: false,
                 gradientColor: '#000000',
                 logoPosition: 'top-left',
+                logoSize: 100,
+                logoRotation: 0,
                 logoGradient: false,
                 highlightedWords: new Set(),
                 highlightPadding: 4,
@@ -910,7 +1126,14 @@
                 isUrdu: false,
                 textLayers: [],
                 activeLayerId: null,
-                nextLayerId: 1
+                nextLayerId: 1,
+                socialIcons: {
+                    facebook: false,
+                    instagram: false,
+                    twitter: false,
+                    linkedin: false
+                },
+                socialPosition: 'bottom-left'
             };
             
             // Text layer class
@@ -1184,15 +1407,26 @@
                     posterCanvas.style.backgroundImage = `url('${state.backgroundImage}')`;
                 }
                 
-                // Blur filter
-                posterCanvas.style.filter = `blur(${state.blur}px)`;
+                // Background filters
+                let filters = [];
+                if (state.blur > 0) filters.push(`blur(${state.blur}px)`);
+                if (state.brightness !== 100) filters.push(`brightness(${state.brightness}%)`);
+                if (state.contrast !== 100) filters.push(`contrast(${state.contrast}%)`);
+                if (state.saturation !== 100) filters.push(`saturate(${state.saturation}%)`);
+                if (state.vintage) {
+                    filters.push('sepia(30%)');
+                    filters.push('contrast(110%)');
+                    filters.push('brightness(110%)');
+                }
                 
-                // Gradient overlay - now using hexToRgba helper for color conversion
+                posterCanvas.style.filter = filters.join(' ');
+                
+                // Gradient overlay
                 const overlayColor = hexToRgba(state.gradientColor, state.opacity / 100);
                 gradientOverlay.style.background = `linear-gradient(to top, ${overlayColor}, rgba(0, 0, 0, 0))`;
                 gradientOverlay.style.height = `${state.height}%`;
                 
-                // Logo gradient - using the same color as main gradient but with fixed opacity
+                // Logo gradient
                 const logoOverlayColor = hexToRgba(state.gradientColor, 0.5);
                 logoGradient.style.background = `linear-gradient(to bottom, ${logoOverlayColor}, rgba(0, 0, 0, 0))`;
                 
@@ -1233,18 +1467,96 @@
                     }
                 });
                 
-                // Logo position
+                // Update logo and social icons
                 updateLogoPosition();
+                updateSocialIcons();
             }
             
             function updateLogoPosition() {
-                if (state.logoPosition === 'top-left') {
-                    logoContainer.style.left = '3%';
-                    logoContainer.style.right = 'auto';
-                } else {
-                    logoContainer.style.right = '3%';
-                    logoContainer.style.left = 'auto';
+                const logo = logoContainer.querySelector('img');
+                if (!logo) return;
+                
+                // Reset position styles
+                logoContainer.style.left = 'auto';
+                logoContainer.style.right = 'auto';
+                logoContainer.style.top = 'auto';
+                logoContainer.style.bottom = 'auto';
+                logoContainer.style.transform = 'none';
+                
+                // Apply new position
+                switch (state.logoPosition) {
+                    case 'top-left':
+                        logoContainer.style.top = '3%';
+                        logoContainer.style.left = '3%';
+                        break;
+                    case 'top-center':
+                        logoContainer.style.top = '3%';
+                        logoContainer.style.left = '50%';
+                        logoContainer.style.transform = 'translateX(-50%)';
+                        break;
+                    case 'top-right':
+                        logoContainer.style.top = '3%';
+                        logoContainer.style.right = '3%';
+                        break;
+                    case 'center-left':
+                        logoContainer.style.top = '50%';
+                        logoContainer.style.left = '3%';
+                        logoContainer.style.transform = 'translateY(-50%)';
+                        break;
+                    case 'center':
+                        logoContainer.style.top = '50%';
+                        logoContainer.style.left = '50%';
+                        logoContainer.style.transform = 'translate(-50%, -50%)';
+                        break;
+                    case 'center-right':
+                        logoContainer.style.top = '50%';
+                        logoContainer.style.right = '3%';
+                        logoContainer.style.transform = 'translateY(-50%)';
+                        break;
+                    case 'bottom-left':
+                        logoContainer.style.bottom = '3%';
+                        logoContainer.style.left = '3%';
+                        break;
+                    case 'bottom-center':
+                        logoContainer.style.bottom = '3%';
+                        logoContainer.style.left = '50%';
+                        logoContainer.style.transform = 'translateX(-50%)';
+                        break;
+                    case 'bottom-right':
+                        logoContainer.style.bottom = '3%';
+                        logoContainer.style.right = '3%';
+                        break;
                 }
+                
+                // Apply size and rotation
+                logo.style.width = `${state.logoSize}px`;
+                logo.style.height = 'auto';
+                logo.style.transform = `rotate(${state.logoRotation}deg)`;
+            }
+            
+            function updateSocialIcons() {
+                // Remove existing social icons
+                const existingSocial = posterCanvas.querySelector('.social-icons-display');
+                if (existingSocial) {
+                    existingSocial.remove();
+                }
+                
+                // Check if any social icons are enabled
+                const enabledIcons = Object.keys(state.socialIcons).filter(icon => state.socialIcons[icon]);
+                if (enabledIcons.length === 0) return;
+                
+                // Create social icons container
+                const socialContainer = document.createElement('div');
+                socialContainer.className = `social-icons-display ${state.socialPosition}`;
+                
+                // Add icons
+                enabledIcons.forEach(iconType => {
+                    const icon = document.createElement('i');
+                    icon.className = `fab fa-${iconType}`;
+                    socialContainer.appendChild(icon);
+                });
+                
+                posterCanvas.appendChild(socialContainer);
             }
             
             function renderText() {
@@ -1319,6 +1631,68 @@
                     textWords.appendChild(chip);
                 });
             }
+            
+            // Background adjustment event listeners
+            if (brightnessRange) {
+                brightnessRange.addEventListener('input', function(e) {
+                    state.brightness = parseInt(e.target.value);
+                    updateCanvas();
+                });
+            }
+            
+            if (contrastRange) {
+                contrastRange.addEventListener('input', function(e) {
+                    state.contrast = parseInt(e.target.value);
+                    updateCanvas();
+                });
+            }
+            
+            if (saturationRange) {
+                saturationRange.addEventListener('input', function(e) {
+                    state.saturation = parseInt(e.target.value);
+                    updateCanvas();
+                });
+            }
+            
+            if (vintageToggle) {
+                vintageToggle.addEventListener('change', function(e) {
+                    state.vintage = this.checked;
+                    updateCanvas();
+                });
+            }
+            
+            // Logo enhancement event listeners
+            if (logoSizeRange) {
+                logoSizeRange.addEventListener('input', function(e) {
+                    state.logoSize = parseInt(e.target.value);
+                    updateCanvas();
+                });
+            }
+            
+            if (logoRotationRange) {
+                logoRotationRange.addEventListener('input', function(e) {
+                    state.logoRotation = parseInt(e.target.value);
+                    updateCanvas();
+                });
+            }
+            
+            // Social icons event listeners
+            socialIconCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const iconType = this.dataset.icon;
+                    state.socialIcons[iconType] = this.checked;
+                    updateCanvas();
+                });
+            });
+            
+            socialPositionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    socialPositionBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    state.socialPosition = this.dataset.socialPosition;
+                    updateCanvas();
+                });
+            });
             
             // Canvas size event listeners
             canvasPreset.addEventListener('change', function(e) {
