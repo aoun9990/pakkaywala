@@ -945,8 +945,11 @@
                     el.dataset.layerId = this.id;
                     el.style.left = this.x + '%';
                     el.style.top = this.y + '%';
-                    this.updateElement();
+                    el.style.position = 'absolute';
+                    el.style.zIndex = '10';
+                    el.style.cursor = 'move';
                     this.element = el;
+                    this.updateElement();
                     this.makeDraggable();
                     return el;
                 }
@@ -966,6 +969,8 @@
                     this.element.style.textAlign = this.alignment;
                     this.element.style.direction = this.rtl ? 'rtl' : 'ltr';
                     this.element.style.transform = `rotate(${this.rotation}deg)`;
+                    this.element.style.lineHeight = '1.2';
+                    this.element.style.userSelect = 'none';
                 }
                 
                 makeDraggable() {
@@ -1171,6 +1176,9 @@
             
             // Functions
             function updateCanvas() {
+                // Update canvas size
+                updateCanvasSize();
+                
                 // Background image
                 if (state.backgroundImage) {
                     posterCanvas.style.backgroundImage = `url('${state.backgroundImage}')`;
@@ -1194,30 +1202,42 @@
                     logoGradient.style.display = 'none';
                 }
                 
-                // Update CSS variables for text color, highlight color and styling
-                document.documentElement.style.setProperty('--highlight-color', state.highlightColor);
-                document.documentElement.style.setProperty('--highlight-padding-horizontal', `${state.highlightPadding}px`);
-                document.documentElement.style.setProperty('--highlight-padding-vertical', '0px'); // Keep vertical padding at 0
-                document.documentElement.style.setProperty('--text-color', state.textColor);
-                
-                // Apply text color directly to text area
-                textArea.style.color = state.textColor;
-                
-                // Text content and language
-                if (state.isUrdu) {
-                    textArea.classList.add('urdu');
-                    // Ensure font is fully applied before showing
-                    if (document.fonts.check('1em "Jameel Noori Nastaleeq"')) {
-                        textArea.classList.add('loaded');
-                    }
+                // Hide old text system if we have new text layers
+                if (state.textLayers.length > 0) {
+                    textArea.style.display = 'none';
                 } else {
-                    textArea.classList.remove('urdu');
-                    textArea.classList.remove('loaded');
+                    textArea.style.display = 'block';
+                    // Keep old system functionality for backwards compatibility
+                    document.documentElement.style.setProperty('--highlight-color', state.highlightColor);
+                    document.documentElement.style.setProperty('--highlight-padding-horizontal', `${state.highlightPadding}px`);
+                    document.documentElement.style.setProperty('--highlight-padding-vertical', '0px');
+                    document.documentElement.style.setProperty('--text-color', state.textColor);
+                    textArea.style.color = state.textColor;
+                    
+                    if (state.isUrdu) {
+                        textArea.classList.add('urdu');
+                        if (document.fonts.check('1em "Jameel Noori Nastaleeq"')) {
+                            textArea.classList.add('loaded');
+                        }
+                    } else {
+                        textArea.classList.remove('urdu');
+                        textArea.classList.remove('loaded');
+                    }
+                    renderText();
                 }
                 
-                renderText();
+                // Update all text layers
+                state.textLayers.forEach(layer => {
+                    if (layer.element) {
+                        layer.updateElement();
+                    }
+                });
                 
                 // Logo position
+                updateLogoPosition();
+            }
+            
+            function updateLogoPosition() {
                 if (state.logoPosition === 'top-left') {
                     logoContainer.style.left = '3%';
                     logoContainer.style.right = 'auto';
@@ -1552,10 +1572,23 @@
                 document.head.appendChild(script);
             }
             
-            // Initialize with default values
-            textInput.value = "I\nlove\nKhalil Ullah";
-            state.textContent = textInput.value;
-            updateWordChips();
+            // Initialize with default values - only if no text layers exist
+            if (state.textLayers.length === 0) {
+                // Create a default text layer
+                const defaultLayer = new TextLayer(1, "Welcome to\nSocial Media\nPost Designer");
+                defaultLayer.fontSize = 2.5;
+                defaultLayer.fontFamily = 'Montserrat';
+                defaultLayer.y = 40; // Position it better
+                state.textLayers.push(defaultLayer);
+                state.nextLayerId = 2;
+                
+                // Add to canvas
+                const element = defaultLayer.createElement();
+                posterCanvas.appendChild(element);
+                
+                // Add to sidebar
+                createTextLayerItem(defaultLayer);
+            }
             
             // Set a default background image
             state.backgroundImage = 'https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80';
