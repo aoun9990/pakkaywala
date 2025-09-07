@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khalil Ullah Naul</title>
-    <!-- Google Fonts - Montserrat Black -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <title>Social Media Post Designer</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Poppins:wght@400;600;700&family=Playfair+Display:wght@400;700;900&family=Oswald:wght@400;600;700&family=Roboto:wght@400;500;700&family=Impact&family=Amiri:wght@400;700&family=Cairo:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,7 +14,15 @@
             src: url('https://fonts.cdnfonts.com/s/33891/Jameel-Noori-Nastaleeq-Regular.woff') format('woff');
             font-weight: normal;
             font-style: normal;
-            font-display: swap; /* Add this to prevent FOIT (Flash of Invisible Text) */
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Nafees Web Naskh';
+            src: url('https://fonts.cdnfonts.com/s/14356/nafees_web_naskh.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
         }
         
         :root {
@@ -172,11 +180,92 @@
             position: relative;
             width: 100%;
             max-width: 480px;
-            aspect-ratio: 4/5;
+            aspect-ratio: 1/1; /* Default to square */
             background-color: #e5e7eb;
             border-radius: 0.5rem;
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: aspect-ratio 0.3s ease;
+        }
+        
+        .canvas-container.instagram-post { aspect-ratio: 1/1; }
+        .canvas-container.instagram-story { aspect-ratio: 9/16; }
+        .canvas-container.facebook-post { aspect-ratio: 1.91/1; }
+        .canvas-container.twitter-post { aspect-ratio: 2/1; }
+        .canvas-container.custom { aspect-ratio: var(--custom-ratio, 1/1); }
+        
+        .style-btn, .alignment-btn, .lang-btn {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .style-btn.active, .alignment-btn.active, .lang-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .text-layer-item {
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+        
+        .text-layer-item.active {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+        
+        .text-layer-item:hover {
+            border-color: #9ca3af;
+        }
+        
+        .text-layer-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .text-layer-name {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .text-layer-preview {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .draggable-text {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            z-index: 10;
+            min-width: 20px;
+            min-height: 20px;
+            border: 2px dashed transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .draggable-text:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .draggable-text.selected {
+            border-color: var(--highlight-color);
         }
         
         #poster-canvas {
@@ -442,7 +531,29 @@
     <div class="app-container">
         <!-- Sidebar Controls -->
         <div class="sidebar">
-            <h1>Pakkay Wala Post Maker by Khalil Ullah Naul</h1>
+            <h1>Social Media Post Designer</h1>
+            
+            <div class="panel">
+                <div class="section-title">Canvas Size</div>
+                <div class="input-group">
+                    <label class="input-label" for="canvas-preset">Choose Size</label>
+                    <select id="canvas-preset" class="input-field">
+                        <option value="instagram-post">Instagram Post (1080x1080)</option>
+                        <option value="instagram-story">Instagram Story (1080x1920)</option>
+                        <option value="facebook-post">Facebook Post (1200x630)</option>
+                        <option value="twitter-post">Twitter/X Post (1024x512)</option>
+                        <option value="custom">Custom Size</option>
+                    </select>
+                </div>
+                <div class="input-group" id="custom-dimensions" style="display: none;">
+                    <label class="input-label">Custom Dimensions</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="number" id="canvas-width" class="input-field" placeholder="Width" value="1080">
+                        <span style="align-self: center;">×</span>
+                        <input type="number" id="canvas-height" class="input-field" placeholder="Height" value="1080">
+                    </div>
+                </div>
+            </div>
             
             <div class="panel">
                 <div class="section-title">Background</div>
@@ -510,21 +621,87 @@
             </div>
             
             <div class="panel">
-                <div class="section-title">Text</div>
+                <div class="section-title">Text Layers</div>
+                <div class="input-group">
+                    <button id="add-text-layer" class="btn btn-primary">
+                        <i class="fas fa-plus btn-icon"></i> Add Text Layer
+                    </button>
+                </div>
+                <div id="text-layers-container">
+                    <!-- Text layers will be added here -->
+                </div>
+            </div>
+            
+            <div class="panel" id="text-controls" style="display: none;">
+                <div class="section-title">Selected Text Layer</div>
                 <div class="input-group">
                     <label class="input-label" for="text-input">Enter Text</label>
                     <textarea id="text-input" class="input-field" rows="4" placeholder="Enter your text here..."></textarea>
                 </div>
                 
                 <div class="input-group">
-                    <label class="input-label">Language</label>
-                    <div class="toggle-container">
-                        <span>English</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="language-toggle">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span>Urdu</span>
+                    <label class="input-label" for="font-family">Font Family</label>
+                    <select id="font-family" class="input-field">
+                        <optgroup label="English Fonts">
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Playfair Display">Playfair Display</option>
+                            <option value="Impact">Impact</option>
+                            <option value="Oswald">Oswald</option>
+                            <option value="Roboto">Roboto</option>
+                        </optgroup>
+                        <optgroup label="Arabic Fonts">
+                            <option value="Amiri">Amiri</option>
+                            <option value="Cairo">Cairo</option>
+                            <option value="Noto Naskh Arabic">Noto Naskh Arabic</option>
+                        </optgroup>
+                        <optgroup label="Urdu Fonts">
+                            <option value="Jameel Noori Nastaleeq">Jameel Noori Nastaleeq</option>
+                            <option value="Nafees Web Naskh">Nafees Web Naskh</option>
+                            <option value="Noto Nastaliq Urdu">Noto Nastaliq Urdu</option>
+                        </optgroup>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Text Style</label>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem;">
+                        <button id="bold-toggle" class="btn style-btn" data-style="bold">
+                            <i class="fas fa-bold"></i>
+                        </button>
+                        <button id="italic-toggle" class="btn style-btn" data-style="italic">
+                            <i class="fas fa-italic"></i>
+                        </button>
+                        <button id="caps-toggle" class="btn style-btn" data-style="caps">
+                            <i class="fas fa-font"></i> CAPS
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Text Alignment</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn alignment-btn active" data-align="left">
+                            <i class="fas fa-align-left"></i>
+                        </button>
+                        <button class="btn alignment-btn" data-align="center">
+                            <i class="fas fa-align-center"></i>
+                        </button>
+                        <button class="btn alignment-btn" data-align="right">
+                            <i class="fas fa-align-right"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">Language & Direction</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn lang-btn active" data-lang="en">EN</button>
+                        <button class="btn lang-btn" data-lang="ar">العربية</button>
+                        <button class="btn lang-btn" data-lang="ur">اردو</button>
+                        <button id="rtl-toggle" class="btn style-btn" data-style="rtl">
+                            <i class="fas fa-exchange-alt"></i> RTL
+                        </button>
                     </div>
                 </div>
                 
@@ -660,14 +837,27 @@
             
             // Get DOM elements
             const posterCanvas = document.getElementById('poster-canvas');
+            const canvasContainer = document.querySelector('.canvas-container');
             const gradientOverlay = document.querySelector('.gradient-overlay');
             const logoGradient = document.querySelector('.logo-gradient');
             const textArea = document.querySelector('.text-area');
             const logoContainer = document.querySelector('.logo-container');
             
+            // Canvas controls
+            const canvasPreset = document.getElementById('canvas-preset');
+            const customDimensions = document.getElementById('custom-dimensions');
+            const canvasWidth = document.getElementById('canvas-width');
+            const canvasHeight = document.getElementById('canvas-height');
+            
+            // Text layer controls
+            const addTextLayerBtn = document.getElementById('add-text-layer');
+            const textLayersContainer = document.getElementById('text-layers-container');
+            const textControls = document.getElementById('text-controls');
+            
             // Input controls
             const bgUpload = document.getElementById('bg-upload');
             const textInput = document.getElementById('text-input');
+            const fontFamily = document.getElementById('font-family');
             const fontSizeRange = document.getElementById('font-size-range');
             const lineSpacingRange = document.getElementById('line-spacing-range');
             const opacityRange = document.getElementById('opacity-range');
@@ -679,7 +869,14 @@
             const textWords = document.getElementById('text-words');
             const logoGradientToggle = document.getElementById('logo-gradient-toggle');
             const highlightPaddingRange = document.getElementById('highlight-padding-range');
-            const languageToggle = document.getElementById('language-toggle');
+            
+            // New style controls
+            const boldToggle = document.getElementById('bold-toggle');
+            const italicToggle = document.getElementById('italic-toggle');
+            const capsToggle = document.getElementById('caps-toggle');
+            const rtlToggle = document.getElementById('rtl-toggle');
+            const alignmentBtns = document.querySelectorAll('.alignment-btn');
+            const langBtns = document.querySelectorAll('.lang-btn');
             
             // Color pickers
             const gradientColorPicker = document.getElementById('gradient-color-picker');
@@ -695,7 +892,9 @@
             // State
             let state = {
                 backgroundImage: null,
-                textContent: '',
+                canvasSize: 'instagram-post',
+                customWidth: 1080,
+                customHeight: 1080,
                 fontSize: 2.5,
                 lineSpacing: 1.2,
                 opacity: 80,
@@ -708,8 +907,106 @@
                 highlightPadding: 4,
                 highlightColor: '#FFD700',
                 textColor: '#ffffff',
-                isUrdu: false
+                isUrdu: false,
+                textLayers: [],
+                activeLayerId: null,
+                nextLayerId: 1
             };
+            
+            // Text layer class
+            class TextLayer {
+                constructor(id, text = 'New Text') {
+                    this.id = id;
+                    this.text = text;
+                    this.fontFamily = 'Montserrat';
+                    this.fontSize = 2.5;
+                    this.color = '#ffffff';
+                    this.bold = false;
+                    this.italic = false;
+                    this.allCaps = false;
+                    this.alignment = 'left';
+                    this.rtl = false;
+                    this.language = 'en';
+                    this.x = 50; // percentage
+                    this.y = 30; // percentage
+                    this.rotation = 0;
+                    this.shadow = false;
+                    this.outline = false;
+                    this.highlightWords = new Set();
+                    this.highlightColor = '#FFD700';
+                    this.element = null;
+                }
+                
+                createElement() {
+                    if (this.element) return this.element;
+                    
+                    const el = document.createElement('div');
+                    el.className = 'draggable-text';
+                    el.dataset.layerId = this.id;
+                    el.style.left = this.x + '%';
+                    el.style.top = this.y + '%';
+                    this.updateElement();
+                    this.element = el;
+                    this.makeDraggable();
+                    return el;
+                }
+                
+                updateElement() {
+                    if (!this.element) return;
+                    
+                    let displayText = this.text;
+                    if (this.allCaps) displayText = displayText.toUpperCase();
+                    
+                    this.element.innerHTML = displayText.split('\n').map(line => `<div>${line}</div>`).join('');
+                    this.element.style.fontFamily = this.fontFamily;
+                    this.element.style.fontSize = `${this.fontSize}rem`;
+                    this.element.style.color = this.color;
+                    this.element.style.fontWeight = this.bold ? 'bold' : 'normal';
+                    this.element.style.fontStyle = this.italic ? 'italic' : 'normal';
+                    this.element.style.textAlign = this.alignment;
+                    this.element.style.direction = this.rtl ? 'rtl' : 'ltr';
+                    this.element.style.transform = `rotate(${this.rotation}deg)`;
+                }
+                
+                makeDraggable() {
+                    let isDragging = false;
+                    let startX, startY, startLeft, startTop;
+                    
+                    this.element.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        startLeft = parseFloat(this.element.style.left);
+                        startTop = parseFloat(this.element.style.top);
+                        
+                        // Select this layer
+                        selectTextLayer(this.id);
+                        
+                        e.preventDefault();
+                    });
+                    
+                    document.addEventListener('mousemove', (e) => {
+                        if (!isDragging) return;
+                        
+                        const deltaX = e.clientX - startX;
+                        const deltaY = e.clientY - startY;
+                        const rect = posterCanvas.getBoundingClientRect();
+                        
+                        const newX = startLeft + (deltaX / rect.width) * 100;
+                        const newY = startTop + (deltaY / rect.height) * 100;
+                        
+                        this.x = Math.max(0, Math.min(100, newX));
+                        this.y = Math.max(0, Math.min(100, newY));
+                        
+                        this.element.style.left = this.x + '%';
+                        this.element.style.top = this.y + '%';
+                    });
+                    
+                    document.addEventListener('mouseup', () => {
+                        isDragging = false;
+                    });
+                }
+            }
             
             // Helper function to convert hex to rgba
             function hexToRgba(hex, opacity) {
@@ -723,6 +1020,153 @@
                 
                 // Return rgba string
                 return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            }
+            
+            // Canvas size management
+            function updateCanvasSize() {
+                const preset = state.canvasSize;
+                canvasContainer.className = 'canvas-container ' + preset;
+                
+                if (preset === 'custom') {
+                    const ratio = state.customWidth / state.customHeight;
+                    canvasContainer.style.setProperty('--custom-ratio', ratio);
+                }
+            }
+            
+            // Text layer management
+            function addTextLayer() {
+                const layer = new TextLayer(state.nextLayerId++, 'New Text');
+                state.textLayers.push(layer);
+                
+                // Add to canvas
+                const element = layer.createElement();
+                posterCanvas.appendChild(element);
+                
+                // Add to sidebar
+                createTextLayerItem(layer);
+                
+                // Select the new layer
+                selectTextLayer(layer.id);
+                
+                updateCanvas();
+            }
+            
+            function createTextLayerItem(layer) {
+                const item = document.createElement('div');
+                item.className = 'text-layer-item';
+                item.dataset.layerId = layer.id;
+                
+                item.innerHTML = `
+                    <div class="text-layer-name">Text Layer ${layer.id}</div>
+                    <div class="text-layer-preview">${layer.text}</div>
+                    <div class="text-layer-controls">
+                        <button class="btn" onclick="selectTextLayer(${layer.id})" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;">Edit</button>
+                        <button class="btn" onclick="deleteTextLayer(${layer.id})" style="padding: 0.25rem 0.5rem; font-size: 0.75rem; color: #dc2626;">Delete</button>
+                    </div>
+                `;
+                
+                textLayersContainer.appendChild(item);
+            }
+            
+            function selectTextLayer(layerId) {
+                // Update active layer
+                state.activeLayerId = layerId;
+                
+                // Update UI
+                document.querySelectorAll('.text-layer-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                document.querySelectorAll('.draggable-text').forEach(el => {
+                    el.classList.remove('selected');
+                });
+                
+                const layerItem = document.querySelector(`[data-layer-id="${layerId}"]`);
+                if (layerItem) {
+                    layerItem.classList.add('active');
+                }
+                
+                const textElement = document.querySelector(`[data-layer-id="${layerId}"]`);
+                if (textElement) {
+                    textElement.classList.add('selected');
+                }
+                
+                // Load layer data into controls
+                const layer = state.textLayers.find(l => l.id === layerId);
+                if (layer) {
+                    textInput.value = layer.text;
+                    fontFamily.value = layer.fontFamily;
+                    
+                    // Update style buttons
+                    boldToggle.classList.toggle('active', layer.bold);
+                    italicToggle.classList.toggle('active', layer.italic);
+                    capsToggle.classList.toggle('active', layer.allCaps);
+                    rtlToggle.classList.toggle('active', layer.rtl);
+                    
+                    // Update alignment
+                    alignmentBtns.forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.align === layer.alignment);
+                    });
+                    
+                    // Update language
+                    langBtns.forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.lang === layer.language);
+                    });
+                    
+                    textControls.style.display = 'block';
+                }
+            }
+            
+            function deleteTextLayer(layerId) {
+                // Remove from array
+                state.textLayers = state.textLayers.filter(l => l.id !== layerId);
+                
+                // Remove from DOM
+                const element = document.querySelector(`[data-layer-id="${layerId}"]`);
+                if (element) element.remove();
+                
+                const layerItem = textLayersContainer.querySelector(`[data-layer-id="${layerId}"]`);
+                if (layerItem) layerItem.remove();
+                
+                // Clear selection if this was active
+                if (state.activeLayerId === layerId) {
+                    state.activeLayerId = null;
+                    textControls.style.display = 'none';
+                }
+                
+                updateCanvas();
+            }
+            
+            function updateActiveLayer() {
+                if (!state.activeLayerId) return;
+                
+                const layer = state.textLayers.find(l => l.id === state.activeLayerId);
+                if (!layer) return;
+                
+                // Update layer properties from controls
+                layer.text = textInput.value;
+                layer.fontFamily = fontFamily.value;
+                layer.bold = boldToggle.classList.contains('active');
+                layer.italic = italicToggle.classList.contains('active');
+                layer.allCaps = capsToggle.classList.contains('active');
+                layer.rtl = rtlToggle.classList.contains('active');
+                
+                // Get active alignment
+                const activeAlign = document.querySelector('.alignment-btn.active');
+                if (activeAlign) layer.alignment = activeAlign.dataset.align;
+                
+                // Get active language
+                const activeLang = document.querySelector('.lang-btn.active');
+                if (activeLang) layer.language = activeLang.dataset.lang;
+                
+                // Update element
+                layer.updateElement();
+                
+                // Update preview in sidebar
+                const layerItem = textLayersContainer.querySelector(`[data-layer-id="${layer.id}"] .text-layer-preview`);
+                if (layerItem) {
+                    layerItem.textContent = layer.text;
+                }
             }
             
             // Functions
@@ -856,6 +1300,85 @@
                 });
             }
             
+            // Canvas size event listeners
+            canvasPreset.addEventListener('change', function(e) {
+                state.canvasSize = e.target.value;
+                customDimensions.style.display = (e.target.value === 'custom') ? 'block' : 'none';
+                updateCanvas();
+            });
+            
+            canvasWidth.addEventListener('input', function(e) {
+                state.customWidth = parseInt(e.target.value);
+                updateCanvas();
+            });
+            
+            canvasHeight.addEventListener('input', function(e) {
+                state.customHeight = parseInt(e.target.value);
+                updateCanvas();
+            });
+            
+            // Text layer event listeners
+            addTextLayerBtn.addEventListener('click', addTextLayer);
+            
+            // Style button event listeners
+            if (boldToggle) {
+                boldToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    updateActiveLayer();
+                });
+            }
+            
+            if (italicToggle) {
+                italicToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    updateActiveLayer();
+                });
+            }
+            
+            if (capsToggle) {
+                capsToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    updateActiveLayer();
+                });
+            }
+            
+            if (rtlToggle) {
+                rtlToggle.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    updateActiveLayer();
+                });
+            }
+            
+            // Alignment buttons
+            alignmentBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alignmentBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateActiveLayer();
+                });
+            });
+            
+            // Language buttons
+            langBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    langBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateActiveLayer();
+                });
+            });
+            
+            // Font family
+            if (fontFamily) {
+                fontFamily.addEventListener('change', function() {
+                    updateActiveLayer();
+                });
+            }
+            
+            // Text input
+            textInput.addEventListener('input', function() {
+                updateActiveLayer();
+            });
+            
             // Color picker event listeners
             gradientColorPicker.addEventListener('input', function(e) {
                 const color = e.target.value;
@@ -900,12 +1423,6 @@
                 }
             });
             
-            textInput.addEventListener('input', function(e) {
-                state.textContent = e.target.value;
-                updateWordChips();
-                updateCanvas();
-            });
-            
             fontSizeRange.addEventListener('input', function(e) {
                 state.fontSize = parseFloat(e.target.value);
                 updateCanvas();
@@ -933,11 +1450,6 @@
             
             highlightPaddingRange.addEventListener('input', function(e) {
                 state.highlightPadding = parseInt(e.target.value);
-                updateCanvas();
-            });
-            
-            languageToggle.addEventListener('change', function(e) {
-                state.isUrdu = this.checked;
                 updateCanvas();
             });
             
