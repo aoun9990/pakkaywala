@@ -3,1054 +3,1221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khalil Ullah Naul</title>
-    <!-- Google Fonts - Montserrat Black -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>Student Productivity System</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @font-face {
-            font-family: 'Jameel Noori Nastaleeq';
-            src: url('https://fonts.cdnfonts.com/s/33891/Jameel-Noori-Nastaleeq-Regular.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap; /* Add this to prevent FOIT (Flash of Invisible Text) */
-        }
-        
-        :root {
-            --sidebar-width: 300px;
-            --primary-color: #3b82f6;
-            --highlight-color: #FFD700;
-            --text-color: #ffffff;
-            --highlight-padding-vertical: 0px;
-            --highlight-padding-horizontal: 4px;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background-color: #f8fafc;
-            overflow-x: hidden;
-        }
-        
-        .app-container {
-            display: flex;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            color: #333;
         }
-        
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: #fff;
-            border-right: 1px solid #e5e7eb;
-            padding: 1.5rem;
-            overflow-y: auto;
-            height: 100vh;
-            position: fixed;
-            z-index: 100;
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 1.5rem;
-        }
-        
-        .section-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #6b7280;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.05em;
-        }
-        
-        .panel {
-            background-color: #fff;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .input-group {
-            margin-bottom: 1rem;
-        }
-        
-        .input-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            color: #4b5563;
-        }
-        
-        .input-field {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
             color: white;
-            border: none;
         }
-        
-        .btn-primary:hover {
-            background-color: #2563eb;
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        
-        .btn-icon {
-            margin-right: 0.5rem;
-            font-size: 1rem;
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
-        
-        .range-slider {
-            width: 100%;
-            margin: 0.5rem 0;
-        }
-        
-        .range-slider input[type="range"] {
-            width: 100%;
-            height: 8px;
-            border-radius: 5px;
-            background: #d1d5db;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        .range-slider input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-        }
-        
-        .range-value {
+
+        .nav-tabs {
             display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            color: #6b7280;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            padding: 5px;
+            backdrop-filter: blur(10px);
         }
-        
-        .canvas-container {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            aspect-ratio: 4/5;
-            background-color: #e5e7eb;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        #poster-canvas {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-        }
-        
-        .gradient-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 45%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+
+        .nav-tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 25px;
             transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
         }
-        
-        .logo-gradient {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 20%;
-            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
-            transition: all 0.3s ease;
+
+        .nav-tab.active {
+            background: rgba(255,255,255,0.9);
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .tab-content {
             display: none;
         }
-        
-        .text-area {
-            position: absolute;
-            bottom: 5%;
-            left: 5%;
-            width: 90%;
-            max-height: 40%;
-            display: flex;
-            flex-direction: column;
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            text-transform: uppercase;
+
+        .tab-content.active {
+            display: block;
         }
-        
-        .text-area.urdu {
-            font-family: 'Jameel Noori Nastaleeq', serif;
-            font-weight: normal;
-            text-transform: none;
-            text-align: right;
-            direction: rtl;
-            right: 5%;
-            left: auto;
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        
-        .text-line {
-            display: inline-block;
-            margin-bottom: 0.25rem;
-            font-size: 2.5rem;
-            line-height: 1.2;
-            letter-spacing: -0.02em;
-        }
-        
-        .text-line.urdu {
-            font-size: 2.2rem;
-            letter-spacing: 0;
-            line-height: 1.5;
-        }
-        
-        .highlight {
-            background-color: var(--highlight-color);
-            color: black;
-            padding: var(--highlight-padding-vertical) var(--highlight-padding-horizontal);
-            display: inline-block;
-            line-height: 1;
-        }
-        
-        .highlight.urdu {
-            line-height: 1.5;
-        }
-        
-        .logo-container {
-            position: absolute;
-            top: 3%;
-            left: 3%;
-            max-width: 25%;
-            max-height: 15%;
-            z-index: 10;
-        }
-        
-        .logo-container img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-        }
-        
-        .color-picker-container {
+
+        .card h3 {
+            margin-bottom: 20px;
+            color: #444;
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 0.5rem;
         }
-        
-        .color-picker {
-            height: 30px;
-            width: 30px;
-            border: none;
-            padding: 0;
-            border-radius: 4px;
-            cursor: pointer;
-            overflow: hidden;
+
+        .card h3 i {
+            color: #667eea;
         }
-        
-        .color-picker::-webkit-color-swatch-wrapper {
-            padding: 0;
-        }
-        
-        .color-picker::-webkit-color-swatch {
-            border: none;
-            border-radius: 4px;
-        }
-        
-        .color-preview {
-            height: 30px;
-            width: 40px;
-            border-radius: 4px;
-            border: 1px solid #d1d5db;
-        }
-        
-        .color-value {
-            font-size: 0.75rem;
-            color: #6b7280;
-            flex: 1;
-        }
-        
-        .direction-selector {
+
+        .grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
-            margin-top: 0.5rem;
+            gap: 20px;
         }
-        
-        .direction-option {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f3f4f6;
-            border: 1px solid #d1d5db;
-            border-radius: 0.25rem;
-            height: 40px;
-            cursor: pointer;
-            transition: all 0.2s;
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         }
-        
-        .direction-option.active {
-            background-color: var(--primary-color);
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .timetable th,
+        .timetable td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .timetable th {
+            background: #667eea;
             color: white;
-            border-color: var(--primary-color);
+            font-weight: 600;
         }
-        
-        .text-editor {
-            margin-top: 1rem;
-        }
-        
-        .word-chip {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            margin: 0.25rem;
-            background: #f3f4f6;
-            border-radius: 0.25rem;
-            cursor: pointer;
-            font-size: 0.75rem;
-            transition: all 0.2s;
-        }
-        
-        .word-chip.highlighted {
-            background: var(--highlight-color);
-        }
-        
-        @media (max-width: 1024px) {
-            .app-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                border-right: none;
-                border-bottom: 1px solid #e5e7eb;
-                padding: 1rem;
-            }
-            
-            .main-content {
-                margin-left: 0;
-                padding: 1rem;
-            }
-        }
-        
-        .toggle-switch {
+
+        .timetable td {
+            background: #f8f9ff;
             position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
         }
-        
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+
+        .current-day {
+            background: #fff3cd !important;
+            border: 2px solid #ffc107;
         }
-        
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+
+        .current-time {
+            background: #d4edda !important;
+            border: 2px solid #28a745;
         }
-        
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
+
+        .task-category {
+            margin-bottom: 20px;
         }
-        
-        input:checked + .toggle-slider {
-            background-color: var(--primary-color);
+
+        .task-category h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
         }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-        
-        .toggle-container {
+
+        .task-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 12px;
+            background: #f8f9ff;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
         }
-        
-        /* Hidden during font loading */
-        .text-area.urdu {
-            opacity: 0;
-            transition: opacity 0.3s ease;
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
-        .text-area.urdu.loaded {
-            opacity: 1;
+
+        .task-item.completed {
+            background: #d4edda;
+            border-left-color: #28a745;
+            opacity: 0.8;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+        }
+
+        .task-text {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #28a745;
+        }
+
+        .task-streak {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .suggestions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .suggestions h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #ffeaa7;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .daily-summary {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .daily-summary h3 {
+            margin-bottom: 15px;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .summary-stat {
+            text-align: center;
+        }
+
+        .summary-stat .number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .summary-stat .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav-tab {
+                min-width: 120px;
+            }
+
+            .summary-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        .missed-tasks {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .missed-tasks h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .missed-task {
+            padding: 8px 0;
+            color: #721c24;
+            border-bottom: 1px solid #f5c6cb;
+        }
+
+        .missed-task:last-child {
+            border-bottom: none;
+        }
+
+        .time-slot {
+            font-size: 0.8rem;
+            color: #666;
+            display: block;
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Sidebar Controls -->
-        <div class="sidebar">
-            <h1>Pakkay Wala Post Maker by Khalil Ullah Naul</h1>
-            
-            <div class="panel">
-                <div class="section-title">Background</div>
-                <div class="input-group">
-                    <label class="input-label" for="bg-upload">Upload Image</label>
-                    <input type="file" id="bg-upload" accept="image/*" class="input-field">
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label" for="blur-range">Blur</label>
-                    <div class="range-slider">
-                        <input type="range" id="blur-range" min="0" max="10" value="0" step="0.5">
-                        <div class="range-value">
-                            <span>0</span>
-                            <span>10</span>
-                        </div>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> Student Productivity System</h1>
+            <p>Manage your schedule, track progress, and achieve your goals</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('dashboard')">
+                <i class="fas fa-home"></i> Dashboard
+            </button>
+            <button class="nav-tab" onclick="showTab('timetable')">
+                <i class="fas fa-calendar"></i> Timetable
+            </button>
+            <button class="nav-tab" onclick="showTab('tasks')">
+                <i class="fas fa-tasks"></i> Tasks
+            </button>
+            <button class="nav-tab" onclick="showTab('progress')">
+                <i class="fas fa-chart-line"></i> Progress
+            </button>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="daily-summary">
+                <h3><i class="fas fa-calendar-day"></i> Today's Summary</h3>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <span class="number" id="today-completed">0</span>
+                        <span class="label">Tasks Completed</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="number" id="today-total">0</span>
+                        <span class="label">Total Tasks</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="number" id="current-streak">0</span>
+                        <span class="label">Day Streak</span>
                     </div>
                 </div>
             </div>
-            
-            <div class="panel">
-                <div class="section-title">Overlay Gradient</div>
-                <div class="input-group">
-                    <label class="input-label">Gradient Color</label>
-                    <div class="color-picker-container">
-                        <input type="color" id="gradient-color-picker" class="color-picker" value="#000000">
-                        <div id="gradient-color-preview" class="color-preview" style="background-color: #000000;"></div>
-                        <div id="gradient-color-value" class="color-value">#000000</div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-clock"></i> Current Schedule</h3>
+                    <div id="current-schedule">
+                        <!-- Current schedule will be populated here -->
                     </div>
                 </div>
-                
-                <div class="input-group">
-                    <label class="input-label" for="opacity-range">Opacity</label>
-                    <div class="range-slider">
-                        <input type="range" id="opacity-range" min="0" max="100" value="80" step="5">
-                        <div class="range-value">
-                            <span>0%</span>
-                            <span>100%</span>
-                        </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-list-check"></i> Today's Tasks</h3>
+                    <div id="today-tasks">
+                        <!-- Today's tasks will be populated here -->
                     </div>
                 </div>
-                
-                <div class="input-group">
-                    <label class="input-label" for="height-range">Height</label>
-                    <div class="range-slider">
-                        <input type="range" id="height-range" min="20" max="100" value="45" step="5">
-                        <div class="range-value">
-                            <span>20%</span>
-                            <span>100%</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Logo Background Gradient</label>
-                    <div class="toggle-container">
-                        <span>Off</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="logo-gradient-toggle">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span>On</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <div class="section-title">Text</div>
-                <div class="input-group">
-                    <label class="input-label" for="text-input">Enter Text</label>
-                    <textarea id="text-input" class="input-field" rows="4" placeholder="Enter your text here..."></textarea>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Language</label>
-                    <div class="toggle-container">
-                        <span>English</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="language-toggle">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <span>Urdu</span>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label" for="font-size-range">Font Size</label>
-                    <div class="range-slider">
-                        <input type="range" id="font-size-range" min="1" max="5" value="2.5" step="0.1">
-                        <div class="range-value">
-                            <span>Small</span>
-                            <span>Large</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label" for="line-spacing-range">Line Spacing</label>
-                    <div class="range-slider">
-                        <input type="range" id="line-spacing-range" min="0.8" max="2" value="1.2" step="0.1">
-                        <div class="range-value">
-                            <span>Tight</span>
-                            <span>Loose</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Text Color</label>
-                    <div class="color-picker-container">
-                        <input type="color" id="text-color-picker" class="color-picker" value="#ffffff">
-                        <div id="text-color-preview" class="color-preview" style="background-color: #ffffff;"></div>
-                        <div id="text-color-value" class="color-value">#ffffff</div>
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Highlight Words</label>
-                    <div id="text-words" class="text-editor">
-                        <!-- Words will be populated here -->
-                    </div>
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Highlight Settings</label>
-                    <div class="input-group">
-                        <label class="input-label" for="highlight-padding-range">Highlight Width</label>
-                        <div class="range-slider">
-                            <input type="range" id="highlight-padding-range" min="0" max="10" value="4" step="1">
-                            <div class="range-value">
-                                <span>0px</span>
-                                <span>10px</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label class="input-label">Highlight Color</label>
-                        <div class="color-picker-container">
-                            <input type="color" id="highlight-color-picker" class="color-picker" value="#FFD700">
-                            <div id="highlight-color-preview" class="color-preview" style="background-color: #FFD700;"></div>
-                            <div id="highlight-color-value" class="color-value">#FFD700</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <div class="section-title">Logo</div>
-                <div class="input-group">
-                    <label class="input-label" for="logo-upload">Upload Logo</label>
-                    <input type="file" id="logo-upload" accept="image/*" class="input-field">
-                </div>
-                
-                <div class="input-group">
-                    <label class="input-label">Position</label>
-                    <div class="direction-selector">
-                        <div class="direction-option active" data-logo-position="top-left">
-                            <i class="fas fa-arrow-up-left"></i>
-                        </div>
-                        <div class="direction-option" data-logo-position="top-right">
-                            <i class="fas fa-arrow-up-right"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="panel">
-                <div class="section-title">Export</div>
-                <button id="download-btn" class="btn btn-primary">
-                    <i class="fas fa-download btn-icon"></i> Download Poster
-                </button>
             </div>
         </div>
-        
-        <!-- Main Content / Canvas -->
-        <div class="main-content">
-            <div class="canvas-container">
-                <div id="poster-canvas">
-                    <div class="gradient-overlay"></div>
-                    <div class="logo-gradient"></div>
-                    <div class="text-area"></div>
-                    <div class="logo-container"></div>
+
+        <!-- Timetable Tab -->
+        <div id="timetable" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-calendar-week"></i> Weekly Timetable</h3>
+                <table class="timetable">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Monday</th>
+                            <th>Tuesday</th>
+                            <th>Wednesday</th>
+                            <th>Thursday</th>
+                            <th>Friday</th>
+                            <th>Saturday</th>
+                            <th>Sunday</th>
+                        </tr>
+                    </thead>
+                    <tbody id="timetable-body">
+                        <!-- Timetable will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tasks Tab -->
+        <div id="tasks" class="tab-content">
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-laptop-code"></i> Side Projects</h3>
+                    <div id="side-projects-tasks">
+                        <!-- Side project tasks will be populated here -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-fire"></i> Task Streaks</h3>
+                    <div id="task-streaks">
+                        <!-- Task streaks will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Missed Tasks</h3>
+                <div class="missed-tasks">
+                    <div id="missed-tasks-list">
+                        <!-- Missed tasks will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tab -->
+        <div id="progress" class="tab-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="weekly-completion">0%</div>
+                    <div class="stat-label">Weekly Completion</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-streak">0</div>
+                    <div class="stat-label">Longest Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-tasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completed-tasks">0</div>
+                    <div class="stat-label">Completed Tasks</div>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3><i class="fas fa-chart-bar"></i> Weekly Progress</h3>
+                    <div class="chart-container">
+                        <canvas id="weekly-chart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-chart-pie"></i> Task Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="task-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-lightbulb"></i> Improvement Suggestions</h3>
+                <div class="suggestions">
+                    <div id="suggestions-list">
+                        <!-- Suggestions will be populated here -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Preload Jameel Noori Nastaleeq font
-            const fontLoader = new FontFace(
-                'Jameel Noori Nastaleeq', 
-                'url(https://fonts.cdnfonts.com/s/33891/Jameel-Noori-Nastaleeq-Regular.woff)',
-                { style: 'normal', weight: 'normal' }
-            );
-            
-            // Add font to document fonts collection
-            fontLoader.load().then(function(loadedFont) {
-                document.fonts.add(loadedFont);
-                console.log('Jameel Noori Nastaleeq font loaded successfully');
-                
-                // Mark Urdu text areas as loaded once font is available
-                document.querySelectorAll('.text-area.urdu').forEach(el => el.classList.add('loaded'));
-                
-                // Trigger a canvas update when the font is loaded
-                if (state.isUrdu) {
-                    updateCanvas();
+        // Data structure for the productivity system
+        let productivityData = {
+            timetable: {
+                Monday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-10:00': 'Computer Science 101',
+                    '10:00-12:00': 'Mathematics',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-15:00': 'Physics',
+                    '15:00-17:00': 'English Literature',
+                    '17:00-18:00': 'Free Time',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Study/Tasks',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
+                },
+                Tuesday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-10:00': 'Database Systems',
+                    '10:00-12:00': 'Data Structures',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-15:00': 'Web Development',
+                    '15:00-17:00': 'Free Time',
+                    '17:00-18:00': 'Exercise',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Study/Tasks',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
+                },
+                Wednesday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-10:00': 'Computer Science 101',
+                    '10:00-12:00': 'Mathematics',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-15:00': 'Software Engineering',
+                    '15:00-17:00': 'Project Work',
+                    '17:00-18:00': 'Free Time',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Study/Tasks',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
+                },
+                Thursday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-10:00': 'Database Systems',
+                    '10:00-12:00': 'Data Structures',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-15:00': 'Physics',
+                    '15:00-17:00': 'English Literature',
+                    '17:00-18:00': 'Free Time',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Study/Tasks',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
+                },
+                Friday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-10:00': 'Web Development',
+                    '10:00-12:00': 'Software Engineering',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-15:00': 'Project Presentations',
+                    '15:00-17:00': 'Free Time',
+                    '17:00-18:00': 'Exercise',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Study/Tasks',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
+                },
+                Saturday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-12:00': 'Personal Projects',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-17:00': 'Side Projects/Tasks',
+                    '17:00-18:00': 'Exercise',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Free Time/Social',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
+                },
+                Sunday: {
+                    '6:00-7:00': 'Wake up & Morning Routine',
+                    '7:00-8:00': 'Breakfast',
+                    '8:00-12:00': 'Study/Review',
+                    '12:00-13:00': 'Lunch Break',
+                    '13:00-17:00': 'Preparation for Week',
+                    '17:00-18:00': 'Exercise',
+                    '18:00-19:00': 'Dinner',
+                    '19:00-21:00': 'Planning/Reflection',
+                    '21:00-22:00': 'Personal Time',
+                    '22:00-6:00': 'Sleep'
                 }
-            }).catch(function(err) {
-                console.error('Error loading Jameel Noori Nastaleeq font:', err);
-                // Fall back to system fonts for Urdu
-                document.documentElement.style.setProperty('--urdu-font', '"Urdu Typesetting", "Alvi Nastaleeq", "Nafees", Arial, sans-serif');
+            },
+            tasks: {
+                'DSA': { dailyQuota: 2, streak: 0, completed: [], category: 'Programming' },
+                'CS50': { dailyQuota: 1, streak: 0, completed: [], category: 'Course' },
+                'Blogging': { dailyQuota: 1, streak: 0, completed: [], category: 'Content' },
+                'E-commerce Project': { dailyQuota: 2, streak: 0, completed: [], category: 'Project' },
+                'Instagram Posts': { dailyQuota: 1, streak: 0, completed: [], category: 'Social Media' }
+            },
+            progress: {
+                dailyCompletions: {},
+                weeklyStats: [],
+                longestStreak: 0,
+                currentStreak: 0
+            }
+        };
+
+        // Initialize or load data from localStorage
+        function initializeData() {
+            const savedData = localStorage.getItem('studentProductivityData');
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                // Merge with default structure to ensure all properties exist
+                productivityData = { ...productivityData, ...parsed };
+            }
+            
+            // Initialize today's data if it doesn't exist
+            const today = getCurrentDateString();
+            if (!productivityData.progress.dailyCompletions[today]) {
+                productivityData.progress.dailyCompletions[today] = {};
+                Object.keys(productivityData.tasks).forEach(task => {
+                    productivityData.progress.dailyCompletions[today][task] = 0;
+                });
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('studentProductivityData', JSON.stringify(productivityData));
+        }
+
+        // Get current date string
+        function getCurrentDateString() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Get current day name
+        function getCurrentDayName() {
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return days[new Date().getDay()];
+        }
+
+        // Get current time in HH:MM format
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+
+        // Show specific tab
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
             });
             
-            // Get DOM elements
-            const posterCanvas = document.getElementById('poster-canvas');
-            const gradientOverlay = document.querySelector('.gradient-overlay');
-            const logoGradient = document.querySelector('.logo-gradient');
-            const textArea = document.querySelector('.text-area');
-            const logoContainer = document.querySelector('.logo-container');
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
             
-            // Input controls
-            const bgUpload = document.getElementById('bg-upload');
-            const textInput = document.getElementById('text-input');
-            const fontSizeRange = document.getElementById('font-size-range');
-            const lineSpacingRange = document.getElementById('line-spacing-range');
-            const opacityRange = document.getElementById('opacity-range');
-            const heightRange = document.getElementById('height-range');
-            const blurRange = document.getElementById('blur-range');
-            const logoUpload = document.getElementById('logo-upload');
-            const downloadBtn = document.getElementById('download-btn');
-            const logoPositionOptions = document.querySelectorAll('.direction-option[data-logo-position]');
-            const textWords = document.getElementById('text-words');
-            const logoGradientToggle = document.getElementById('logo-gradient-toggle');
-            const highlightPaddingRange = document.getElementById('highlight-padding-range');
-            const languageToggle = document.getElementById('language-toggle');
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
             
-            // Color pickers
-            const gradientColorPicker = document.getElementById('gradient-color-picker');
-            const gradientColorPreview = document.getElementById('gradient-color-preview');
-            const gradientColorValue = document.getElementById('gradient-color-value');
-            const highlightColorPicker = document.getElementById('highlight-color-picker');
-            const highlightColorPreview = document.getElementById('highlight-color-preview');
-            const highlightColorValue = document.getElementById('highlight-color-value');
-            const textColorPicker = document.getElementById('text-color-picker');
-            const textColorPreview = document.getElementById('text-color-preview');
-            const textColorValue = document.getElementById('text-color-value');
-            
-            // State
-            let state = {
-                backgroundImage: null,
-                textContent: '',
-                fontSize: 2.5,
-                lineSpacing: 1.2,
-                opacity: 80,
-                height: 45,
-                blur: 0,
-                gradientColor: '#000000',
-                logoPosition: 'top-left',
-                logoGradient: false,
-                highlightedWords: new Set(),
-                highlightPadding: 4,
-                highlightColor: '#FFD700',
-                textColor: '#ffffff',
-                isUrdu: false
-            };
-            
-            // Helper function to convert hex to rgba
-            function hexToRgba(hex, opacity) {
-                // Remove the hash if it's there
-                hex = hex.replace('#', '');
-                
-                // Parse the hex values
-                const r = parseInt(hex.substring(0, 2), 16);
-                const g = parseInt(hex.substring(2, 4), 16);
-                const b = parseInt(hex.substring(4, 6), 16);
-                
-                // Return rgba string
-                return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            // Update content based on tab
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            } else if (tabName === 'timetable') {
+                updateTimetable();
+            } else if (tabName === 'tasks') {
+                updateTasks();
+            } else if (tabName === 'progress') {
+                updateProgress();
             }
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const today = getCurrentDateString();
+            const todayData = productivityData.progress.dailyCompletions[today] || {};
             
-            // Functions
-            function updateCanvas() {
-                // Background image
-                if (state.backgroundImage) {
-                    posterCanvas.style.backgroundImage = `url('${state.backgroundImage}')`;
-                }
-                
-                // Blur filter
-                posterCanvas.style.filter = `blur(${state.blur}px)`;
-                
-                // Gradient overlay - now using hexToRgba helper for color conversion
-                const overlayColor = hexToRgba(state.gradientColor, state.opacity / 100);
-                gradientOverlay.style.background = `linear-gradient(to top, ${overlayColor}, rgba(0, 0, 0, 0))`;
-                gradientOverlay.style.height = `${state.height}%`;
-                
-                // Logo gradient - using the same color as main gradient but with fixed opacity
-                const logoOverlayColor = hexToRgba(state.gradientColor, 0.5);
-                logoGradient.style.background = `linear-gradient(to bottom, ${logoOverlayColor}, rgba(0, 0, 0, 0))`;
-                
-                if (state.logoGradient) {
-                    logoGradient.style.display = 'block';
-                } else {
-                    logoGradient.style.display = 'none';
-                }
-                
-                // Update CSS variables for text color, highlight color and styling
-                document.documentElement.style.setProperty('--highlight-color', state.highlightColor);
-                document.documentElement.style.setProperty('--highlight-padding-horizontal', `${state.highlightPadding}px`);
-                document.documentElement.style.setProperty('--highlight-padding-vertical', '0px'); // Keep vertical padding at 0
-                document.documentElement.style.setProperty('--text-color', state.textColor);
-                
-                // Apply text color directly to text area
-                textArea.style.color = state.textColor;
-                
-                // Text content and language
-                if (state.isUrdu) {
-                    textArea.classList.add('urdu');
-                    // Ensure font is fully applied before showing
-                    if (document.fonts.check('1em "Jameel Noori Nastaleeq"')) {
-                        textArea.classList.add('loaded');
-                    }
-                } else {
-                    textArea.classList.remove('urdu');
-                    textArea.classList.remove('loaded');
-                }
-                
-                renderText();
-                
-                // Logo position
-                if (state.logoPosition === 'top-left') {
-                    logoContainer.style.left = '3%';
-                    logoContainer.style.right = 'auto';
-                } else {
-                    logoContainer.style.right = '3%';
-                    logoContainer.style.left = 'auto';
-                }
-            }
+            // Update summary stats
+            const completedTasks = Object.values(todayData).reduce((sum, count) => sum + count, 0);
+            const totalTasks = Object.values(productivityData.tasks).reduce((sum, task) => sum + task.dailyQuota, 0);
             
-            function renderText() {
-                textArea.innerHTML = '';
-                if (!state.textContent) return;
-                
-                const lines = state.textContent.split('\n');
-                lines.forEach(line => {
-                    if (line.trim() === '') return;
+            document.getElementById('today-completed').textContent = completedTasks;
+            document.getElementById('today-total').textContent = totalTasks;
+            document.getElementById('current-streak').textContent = productivityData.progress.currentStreak;
+            
+            // Update current schedule
+            updateCurrentSchedule();
+            
+            // Update today's tasks
+            updateTodayTasks();
+        }
+
+        // Update current schedule
+        function updateCurrentSchedule() {
+            const currentDay = getCurrentDayName();
+            const currentTime = getCurrentTime();
+            const currentHour = parseInt(currentTime.split(':')[0]);
+            
+            const scheduleContainer = document.getElementById('current-schedule');
+            scheduleContainer.innerHTML = '';
+            
+            const daySchedule = productivityData.timetable[currentDay];
+            if (daySchedule) {
+                Object.entries(daySchedule).forEach(([timeSlot, activity]) => {
+                    const [startTime] = timeSlot.split('-');
+                    const startHour = parseInt(startTime.split(':')[0]);
                     
-                    const lineEl = document.createElement('span');
-                    lineEl.classList.add('text-line');
-                    if (state.isUrdu) lineEl.classList.add('urdu');
-                    
-                    lineEl.style.fontSize = `${state.fontSize}rem`;
-                    lineEl.style.lineHeight = state.lineSpacing;
-                    lineEl.style.marginBottom = `${state.lineSpacing * 0.5}rem`;
-                    
-                    // Process words for highlighting
-                    const words = line.split(' ');
-                    words.forEach((word, index) => {
-                        const wordSpan = document.createElement('span');
-                        if (state.highlightedWords.has(word.toLowerCase())) {
-                            wordSpan.classList.add('highlight');
-                            if (state.isUrdu) wordSpan.classList.add('urdu');
+                    // Show current and next few activities
+                    if (startHour >= currentHour && startHour <= currentHour + 3) {
+                        const activityDiv = document.createElement('div');
+                        activityDiv.className = 'task-item';
+                        if (startHour === currentHour) {
+                            activityDiv.classList.add('current-time');
                         }
-                        wordSpan.textContent = word;
-                        lineEl.appendChild(wordSpan);
                         
-                        // Add space except after last word
-                        if (index < words.length - 1) {
-                            lineEl.appendChild(document.createTextNode(' '));
-                        }
-                    });
-                    
-                    textArea.appendChild(lineEl);
-                });
-            }
-            
-            function updateWordChips() {
-                textWords.innerHTML = '';
-                if (!state.textContent) return;
-                
-                const words = state.textContent.split(/\s+/)
-                    .filter(word => word.trim() !== '')
-                    .map(word => word.toLowerCase());
-                
-                // Remove duplicates
-                const uniqueWords = [...new Set(words)];
-                
-                uniqueWords.forEach(word => {
-                    const chip = document.createElement('span');
-                    chip.classList.add('word-chip');
-                    if (state.highlightedWords.has(word)) {
-                        chip.classList.add('highlighted');
-                        // Apply highlight color to the chip as well
-                        chip.style.backgroundColor = state.highlightColor;
+                        activityDiv.innerHTML = `
+                            <div>
+                                <div class="task-text">${activity}</div>
+                                <div class="time-slot">${timeSlot}</div>
+                            </div>
+                        `;
+                        scheduleContainer.appendChild(activityDiv);
                     }
-                    chip.textContent = word;
-                    chip.addEventListener('click', () => {
-                        if (state.highlightedWords.has(word)) {
-                            state.highlightedWords.delete(word);
-                            chip.classList.remove('highlighted');
-                            chip.style.backgroundColor = '';
-                        } else {
-                            state.highlightedWords.add(word);
-                            chip.classList.add('highlighted');
-                            chip.style.backgroundColor = state.highlightColor;
-                        }
-                        updateCanvas();
-                    });
-                    textWords.appendChild(chip);
                 });
             }
+        }
+
+        // Update today's tasks
+        function updateTodayTasks() {
+            const today = getCurrentDateString();
+            const todayData = productivityData.progress.dailyCompletions[today] || {};
             
-            // Color picker event listeners
-            gradientColorPicker.addEventListener('input', function(e) {
-                const color = e.target.value;
-                state.gradientColor = color;
-                gradientColorPreview.style.backgroundColor = color;
-                gradientColorValue.textContent = color;
-                updateCanvas();
-            });
+            const tasksContainer = document.getElementById('today-tasks');
+            tasksContainer.innerHTML = '';
             
-            highlightColorPicker.addEventListener('input', function(e) {
-                const color = e.target.value;
-                state.highlightColor = color;
-                highlightColorPreview.style.backgroundColor = color;
-                highlightColorValue.textContent = color;
+            Object.entries(productivityData.tasks).forEach(([taskName, taskInfo]) => {
+                const completed = todayData[taskName] || 0;
+                const quota = taskInfo.dailyQuota;
                 
-                // Update already highlighted word chips
-                document.querySelectorAll('.word-chip.highlighted').forEach(chip => {
-                    chip.style.backgroundColor = color;
-                });
-                
-                updateCanvas();
-            });
-            
-            textColorPicker.addEventListener('input', function(e) {
-                const color = e.target.value;
-                state.textColor = color;
-                textColorPreview.style.backgroundColor = color;
-                textColorValue.textContent = color;
-                updateCanvas();
-            });
-            
-            // Event listeners
-            bgUpload.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        state.backgroundImage = e.target.result;
-                        updateCanvas();
-                    };
-                    reader.readAsDataURL(file);
+                for (let i = 0; i < quota; i++) {
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-item';
+                    if (i < completed) {
+                        taskDiv.classList.add('completed');
+                    }
+                    
+                    taskDiv.innerHTML = `
+                        <input type="checkbox" class="task-checkbox" 
+                               ${i < completed ? 'checked' : ''} 
+                               onchange="toggleTask('${taskName}', ${i})">
+                        <div class="task-text">${taskName} ${i + 1}</div>
+                        <span class="task-streak">${taskInfo.streak} days</span>
+                    `;
+                    tasksContainer.appendChild(taskDiv);
                 }
             });
+        }
+
+        // Toggle task completion
+        function toggleTask(taskName, index) {
+            const today = getCurrentDateString();
+            if (!productivityData.progress.dailyCompletions[today]) {
+                productivityData.progress.dailyCompletions[today] = {};
+            }
             
-            textInput.addEventListener('input', function(e) {
-                state.textContent = e.target.value;
-                updateWordChips();
-                updateCanvas();
-            });
+            const currentCompleted = productivityData.progress.dailyCompletions[today][taskName] || 0;
             
-            fontSizeRange.addEventListener('input', function(e) {
-                state.fontSize = parseFloat(e.target.value);
-                updateCanvas();
-            });
+            if (index < currentCompleted) {
+                // Unchecking a task
+                productivityData.progress.dailyCompletions[today][taskName] = index;
+            } else {
+                // Checking a task
+                productivityData.progress.dailyCompletions[today][taskName] = index + 1;
+            }
             
-            lineSpacingRange.addEventListener('input', function(e) {
-                state.lineSpacing = parseFloat(e.target.value);
-                updateCanvas();
-            });
+            // Update streaks
+            updateStreaks();
+            saveData();
+            updateDashboard();
+        }
+
+        // Update streaks
+        function updateStreaks() {
+            const today = getCurrentDateString();
+            const todayData = productivityData.progress.dailyCompletions[today] || {};
             
-            opacityRange.addEventListener('input', function(e) {
-                state.opacity = parseInt(e.target.value);
-                updateCanvas();
-            });
+            // Calculate daily completion rate
+            const totalCompleted = Object.values(todayData).reduce((sum, count) => sum + count, 0);
+            const totalQuota = Object.values(productivityData.tasks).reduce((sum, task) => sum + task.dailyQuota, 0);
+            const completionRate = totalCompleted / totalQuota;
             
-            heightRange.addEventListener('input', function(e) {
-                state.height = parseInt(e.target.value);
-                updateCanvas();
-            });
-            
-            blurRange.addEventListener('input', function(e) {
-                state.blur = parseFloat(e.target.value);
-                updateCanvas();
-            });
-            
-            highlightPaddingRange.addEventListener('input', function(e) {
-                state.highlightPadding = parseInt(e.target.value);
-                updateCanvas();
-            });
-            
-            languageToggle.addEventListener('change', function(e) {
-                state.isUrdu = this.checked;
-                updateCanvas();
-            });
-            
-            logoPositionOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    logoPositionOptions.forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    state.logoPosition = this.dataset.logoPosition;
-                    updateCanvas();
-                });
-            });
-            
-            logoGradientToggle.addEventListener('change', function() {
-                state.logoGradient = this.checked;
-                updateCanvas();
-            });
-            
-            logoUpload.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const img = new Image();
-                        img.onload = function() {
-                            logoContainer.innerHTML = '';
-                            logoContainer.appendChild(img);
-                        };
-                        img.style.maxWidth = '100%';
-                        img.style.maxHeight = '100%';
-                        img.src = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
+            // Update current streak
+            if (completionRate >= 0.8) { // 80% completion threshold
+                productivityData.progress.currentStreak = (productivityData.progress.currentStreak || 0) + 1;
+                if (productivityData.progress.currentStreak > productivityData.progress.longestStreak) {
+                    productivityData.progress.longestStreak = productivityData.progress.currentStreak;
                 }
-            });
+            } else {
+                productivityData.progress.currentStreak = 0;
+            }
             
-            // Download functionality - exact replica of what's shown in browser
-            function downloadPoster() {
-                if (!state.backgroundImage) {
-                    alert('Please upload a background image first.');
-                    return;
-                }
-                
-                // Load html2canvas if not already loaded
-                if (typeof html2canvas === 'undefined') {
-                    const script = document.createElement('script');
-                    script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-                    script.onload = function() {
-                        console.log('html2canvas loaded dynamically');
-                        captureAndDownload();
-                    };
-                    document.head.appendChild(script);
+            // Update individual task streaks
+            Object.entries(productivityData.tasks).forEach(([taskName, taskInfo]) => {
+                const completed = todayData[taskName] || 0;
+                if (completed >= taskInfo.dailyQuota) {
+                    taskInfo.streak = (taskInfo.streak || 0) + 1;
                 } else {
-                    captureAndDownload();
+                    taskInfo.streak = 0;
                 }
+            });
+        }
+
+        // Update timetable
+        function updateTimetable() {
+            const tableBody = document.getElementById('timetable-body');
+            tableBody.innerHTML = '';
+            
+            const timeSlots = [
+                '6:00-7:00', '7:00-8:00', '8:00-10:00', '10:00-12:00',
+                '12:00-13:00', '13:00-15:00', '15:00-17:00', '17:00-18:00',
+                '18:00-19:00', '19:00-21:00', '21:00-22:00', '22:00-6:00'
+            ];
+            
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const currentDay = getCurrentDayName();
+            const currentTime = getCurrentTime();
+            const currentHour = parseInt(currentTime.split(':')[0]);
+            
+            timeSlots.forEach(timeSlot => {
+                const row = document.createElement('tr');
+                const timeCell = document.createElement('td');
+                timeCell.textContent = timeSlot;
+                timeCell.style.fontWeight = 'bold';
+                row.appendChild(timeCell);
+                
+                days.forEach(day => {
+                    const cell = document.createElement('td');
+                    const activity = productivityData.timetable[day][timeSlot] || '';
+                    cell.textContent = activity;
+                    
+                    // Highlight current day
+                    if (day === currentDay) {
+                        cell.classList.add('current-day');
+                    }
+                    
+                    // Highlight current time slot
+                    const [startTime] = timeSlot.split('-');
+                    const startHour = parseInt(startTime.split(':')[0]);
+                    if (day === currentDay && startHour === currentHour) {
+                        cell.classList.add('current-time');
+                    }
+                    
+                    row.appendChild(cell);
+                });
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Update tasks tab
+        function updateTasks() {
+            updateSideProjectsTasks();
+            updateTaskStreaks();
+            updateMissedTasks();
+        }
+
+        // Update side projects tasks
+        function updateSideProjectsTasks() {
+            const container = document.getElementById('side-projects-tasks');
+            container.innerHTML = '';
+            
+            const categories = {};
+            Object.entries(productivityData.tasks).forEach(([taskName, taskInfo]) => {
+                if (!categories[taskInfo.category]) {
+                    categories[taskInfo.category] = [];
+                }
+                categories[taskInfo.category].push({ name: taskName, info: taskInfo });
+            });
+            
+            Object.entries(categories).forEach(([category, tasks]) => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'task-category';
+                categoryDiv.innerHTML = `<h4>${category}</h4>`;
+                
+                tasks.forEach(({ name, info }) => {
+                    const today = getCurrentDateString();
+                    const completed = productivityData.progress.dailyCompletions[today]?.[name] || 0;
+                    const quota = info.dailyQuota;
+                    
+                    const taskDiv = document.createElement('div');
+                    taskDiv.className = 'task-item';
+                    taskDiv.innerHTML = `
+                        <div class="task-text">${name}</div>
+                        <div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${(completed / quota) * 100}%"></div>
+                            </div>
+                            <small>${completed}/${quota} completed</small>
+                        </div>
+                    `;
+                    categoryDiv.appendChild(taskDiv);
+                });
+                
+                container.appendChild(categoryDiv);
+            });
+        }
+
+        // Update task streaks
+        function updateTaskStreaks() {
+            const container = document.getElementById('task-streaks');
+            container.innerHTML = '';
+            
+            Object.entries(productivityData.tasks).forEach(([taskName, taskInfo]) => {
+                const streakDiv = document.createElement('div');
+                streakDiv.className = 'task-item';
+                streakDiv.innerHTML = `
+                    <div class="task-text">${taskName}</div>
+                    <div class="task-streak">${taskInfo.streak} days</div>
+                `;
+                container.appendChild(streakDiv);
+            });
+        }
+
+        // Update missed tasks
+        function updateMissedTasks() {
+            const container = document.getElementById('missed-tasks-list');
+            container.innerHTML = '';
+            
+            const today = getCurrentDateString();
+            const todayData = productivityData.progress.dailyCompletions[today] || {};
+            
+            Object.entries(productivityData.tasks).forEach(([taskName, taskInfo]) => {
+                const completed = todayData[taskName] || 0;
+                const missed = taskInfo.dailyQuota - completed;
+                
+                if (missed > 0) {
+                    const missedDiv = document.createElement('div');
+                    missedDiv.className = 'missed-task';
+                    missedDiv.innerHTML = `${taskName}: ${missed} task(s) remaining`;
+                    container.appendChild(missedDiv);
+                }
+            });
+            
+            if (container.children.length === 0) {
+                container.innerHTML = '<div class="missed-task">No missed tasks today! Great job! 🎉</div>';
+            }
+        }
+
+        // Update progress tab
+        function updateProgress() {
+            updateProgressStats();
+            updateCharts();
+            updateSuggestions();
+        }
+
+        // Update progress statistics
+        function updateProgressStats() {
+            const today = getCurrentDateString();
+            const todayData = productivityData.progress.dailyCompletions[today] || {};
+            
+            // Calculate weekly completion rate
+            const weekDates = getWeekDates();
+            let weeklyCompleted = 0;
+            let weeklyTotal = 0;
+            
+            weekDates.forEach(date => {
+                const dayData = productivityData.progress.dailyCompletions[date] || {};
+                weeklyCompleted += Object.values(dayData).reduce((sum, count) => sum + count, 0);
+                weeklyTotal += Object.values(productivityData.tasks).reduce((sum, task) => sum + task.dailyQuota, 0);
+            });
+            
+            const weeklyCompletionRate = weeklyTotal > 0 ? ((weeklyCompleted / weeklyTotal) * 100).toFixed(0) : 0;
+            
+            // Calculate total tasks
+            const totalTasksCompleted = Object.values(productivityData.progress.dailyCompletions)
+                .reduce((total, dayData) => {
+                    return total + Object.values(dayData).reduce((sum, count) => sum + count, 0);
+                }, 0);
+            
+            // Update UI
+            document.getElementById('weekly-completion').textContent = weeklyCompletionRate + '%';
+            document.getElementById('total-streak').textContent = productivityData.progress.longestStreak;
+            document.getElementById('total-tasks').textContent = Object.keys(productivityData.tasks).length;
+            document.getElementById('completed-tasks').textContent = totalTasksCompleted;
+        }
+
+        // Get dates for current week
+        function getWeekDates() {
+            const today = new Date();
+            const currentDay = today.getDay();
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - currentDay);
+            
+            const weekDates = [];
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startOfWeek);
+                date.setDate(startOfWeek.getDate() + i);
+                weekDates.push(date.toISOString().split('T')[0]);
+            }
+            return weekDates;
+        }
+
+        // Update charts
+        function updateCharts() {
+            updateWeeklyChart();
+            updateTaskDistributionChart();
+        }
+
+        // Update weekly progress chart
+        function updateWeeklyChart() {
+            const ctx = document.getElementById('weekly-chart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.weeklyChart) {
+                window.weeklyChart.destroy();
             }
             
-            function captureAndDownload() {
-                html2canvas(document.querySelector("#poster-canvas"), {
-                    allowTaint: true,
-                    useCORS: true,
-                    scale: 2, // Higher resolution
-                    backgroundColor: null, // Transparent background
-                    onclone: function(clonedDoc) {
-                        // For the cloned document, make sure fonts are applied
-                        const clonedTextArea = clonedDoc.querySelector('.text-area');
-                        
-                        if (state.isUrdu) {
-                            clonedTextArea.style.fontFamily = "'Jameel Noori Nastaleeq', serif";
-                            clonedTextArea.classList.add('loaded');
+            const weekDates = getWeekDates();
+            const weekLabels = weekDates.map(date => {
+                const d = new Date(date);
+                return d.toLocaleDateString('en-US', { weekday: 'short' });
+            });
+            
+            const weeklyData = weekDates.map(date => {
+                const dayData = productivityData.progress.dailyCompletions[date] || {};
+                const completed = Object.values(dayData).reduce((sum, count) => sum + count, 0);
+                const total = Object.values(productivityData.tasks).reduce((sum, task) => sum + task.dailyQuota, 0);
+                return total > 0 ? ((completed / total) * 100) : 0;
+            });
+            
+            window.weeklyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: weekLabels,
+                    datasets: [{
+                        label: 'Completion Rate (%)',
+                        data: weeklyData,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
                         }
                     }
-                }).then(canvas => {
-                    // Add timestamp and username
-                    const ctx = canvas.getContext('2d');
-                    ctx.font = '14px Arial';
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-                    ctx.textAlign = 'right';
-                    ctx.fillText(`2025-05-09 12:48:39 - aoun9990`, canvas.width - 10, canvas.height - 10);
-                    
-                    // Create download link
-                    const link = document.createElement('a');
-                    link.download = 'political-poster.png';
-                    link.href = canvas.toDataURL('image/png');
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
+                }
+            });
+        }
+
+        // Update task distribution chart
+        function updateTaskDistributionChart() {
+            const ctx = document.getElementById('task-distribution-chart').getContext('2d');
+            
+            // Destroy existing chart if it exists
+            if (window.taskChart) {
+                window.taskChart.destroy();
             }
             
-            // Connect download button
-            downloadBtn.addEventListener('click', downloadPoster);
+            const taskNames = Object.keys(productivityData.tasks);
+            const taskData = taskNames.map(taskName => {
+                return Object.values(productivityData.progress.dailyCompletions)
+                    .reduce((total, dayData) => {
+                        return total + (dayData[taskName] || 0);
+                    }, 0);
+            });
             
-            // Include html2canvas library
-            if (!window.html2canvas) {
-                const script = document.createElement('script');
-                script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-                script.onload = function() {
-                    console.log('html2canvas loaded');
-                };
-                document.head.appendChild(script);
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+            ];
+            
+            window.taskChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: taskNames,
+                    datasets: [{
+                        data: taskData,
+                        backgroundColor: colors.slice(0, taskNames.length),
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update improvement suggestions
+        function updateSuggestions() {
+            const container = document.getElementById('suggestions-list');
+            container.innerHTML = '';
+            
+            const suggestions = generateSuggestions();
+            
+            suggestions.forEach(suggestion => {
+                const suggestionDiv = document.createElement('div');
+                suggestionDiv.className = 'suggestion-item';
+                suggestionDiv.innerHTML = `<i class="fas fa-lightbulb"></i> ${suggestion}`;
+                container.appendChild(suggestionDiv);
+            });
+        }
+
+        // Generate improvement suggestions
+        function generateSuggestions() {
+            const suggestions = [];
+            const today = getCurrentDateString();
+            const todayData = productivityData.progress.dailyCompletions[today] || {};
+            
+            // Check for low completion rates
+            Object.entries(productivityData.tasks).forEach(([taskName, taskInfo]) => {
+                const completed = todayData[taskName] || 0;
+                const completionRate = completed / taskInfo.dailyQuota;
+                
+                if (completionRate < 0.5) {
+                    suggestions.push(`Focus more on ${taskName} - you're behind on today's quota`);
+                }
+                
+                if (taskInfo.streak === 0) {
+                    suggestions.push(`Try to rebuild your ${taskName} streak by completing all tasks today`);
+                }
+            });
+            
+            // Check overall performance
+            const totalCompleted = Object.values(todayData).reduce((sum, count) => sum + count, 0);
+            const totalQuota = Object.values(productivityData.tasks).reduce((sum, task) => sum + task.dailyQuota, 0);
+            const overallRate = totalCompleted / totalQuota;
+            
+            if (overallRate < 0.6) {
+                suggestions.push("Consider breaking tasks into smaller chunks for better completion");
+                suggestions.push("Review your timetable to allocate more focused study time");
             }
             
-            // Initialize with default values
-            textInput.value = "I\nlove\nKhalil Ullah";
-            state.textContent = textInput.value;
-            updateWordChips();
+            if (productivityData.progress.currentStreak < 3) {
+                suggestions.push("Aim for consistency - try to complete at least 80% of tasks daily");
+            }
             
-            // Set a default background image
-            state.backgroundImage = 'https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80';
+            if (suggestions.length === 0) {
+                suggestions.push("Great job! You're on track with your goals 🎉");
+                suggestions.push("Consider setting more challenging targets to push yourself further");
+            }
             
-            // Initial update
-            updateCanvas();
-        });
+            return suggestions;
+        }
+
+        // Initialize the application
+        function initApp() {
+            initializeData();
+            updateDashboard();
+            
+            // Auto-update every minute
+            setInterval(() => {
+                if (document.querySelector('.tab-content.active').id === 'dashboard') {
+                    updateCurrentSchedule();
+                }
+            }, 60000);
+        }
+
+        // Start the application when page loads
+        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
