@@ -4,197 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Poster Generator Tool</title>
-    <!-- Inline Fabric.js library for offline use -->
-    <script>
-        // Minimal Fabric.js implementation for canvas functionality
-        window.fabric = {
-            Canvas: function(element, options = {}) {
-                const canvas = document.getElementById(element);
-                const ctx = canvas.getContext('2d');
-                
-                // Set canvas dimensions
-                canvas.width = options.width || 600;
-                canvas.height = options.height || 800;
-                
-                this.canvas = canvas;
-                this.ctx = ctx;
-                this.objects = [];
-                this.backgroundColor = options.backgroundColor || '#000000';
-                this.activeObject = null;
-                
-                // Set initial background
-                this.setBackgroundColor(this.backgroundColor);
-                
-                return this;
-            },
-            
-            Text: function(text, options = {}) {
-                this.type = 'text';
-                this.text = text;
-                this.left = options.left || 0;
-                this.top = options.top || 0;
-                this.fontSize = options.fontSize || 20;
-                this.fontFamily = options.fontFamily || 'Arial';
-                this.fill = options.fill || '#000000';
-                this.fontWeight = options.fontWeight || 'normal';
-                this.originX = options.originX || 'left';
-                this.originY = options.originY || 'top';
-                this.selectable = options.selectable !== false;
-                this.evented = options.evented !== false;
-                this.backgroundColor = options.backgroundColor || '';
-                this.padding = options.padding || 0;
-                
-                return this;
-            },
-            
-            Image: {
-                fromURL: function(url, callback) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const fabricImg = {
-                            type: 'image',
-                            _element: img,
-                            width: img.width,
-                            height: img.height,
-                            left: 0,
-                            top: 0,
-                            scaleX: 1,
-                            scaleY: 1,
-                            originX: 'left',
-                            originY: 'top',
-                            selectable: true,
-                            evented: true,
-                            
-                            set: function(props) {
-                                Object.assign(this, props);
-                                return this;
-                            }
-                        };
-                        callback(fabricImg);
-                    };
-                    img.src = url;
-                }
-            },
-            
-            Polygon: function(points, options = {}) {
-                this.type = 'polygon';
-                this.points = points;
-                this.fill = options.fill || '#000000';
-                this.selectable = options.selectable !== false;
-                this.evented = options.evented !== false;
-                
-                return this;
-            }
-        };
-        
-        // Extend Canvas prototype with methods
-        fabric.Canvas.prototype.setBackgroundColor = function(color, callback) {
-            this.backgroundColor = color;
-            this.requestRenderAll();
-            if (callback) callback();
-        };
-        
-        fabric.Canvas.prototype.add = function(...objects) {
-            objects.forEach(obj => this.objects.push(obj));
-            this.requestRenderAll();
-        };
-        
-        fabric.Canvas.prototype.remove = function(obj) {
-            const index = this.objects.indexOf(obj);
-            if (index > -1) {
-                this.objects.splice(index, 1);
-                this.requestRenderAll();
-            }
-        };
-        
-        fabric.Canvas.prototype.sendToBack = function(obj) {
-            this.remove(obj);
-            this.objects.unshift(obj);
-            this.requestRenderAll();
-        };
-        
-        fabric.Canvas.prototype.bringToFront = function(obj) {
-            this.remove(obj);
-            this.objects.push(obj);
-            this.requestRenderAll();
-        };
-        
-        fabric.Canvas.prototype.requestRenderAll = function() {
-            this.ctx.fillStyle = this.backgroundColor;
-            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-            
-            this.objects.forEach(obj => {
-                this.ctx.save();
-                
-                if (obj.type === 'text') {
-                    // Set text properties
-                    this.ctx.font = `${obj.fontWeight} ${obj.fontSize}px ${obj.fontFamily}`;
-                    this.ctx.fillStyle = obj.fill;
-                    this.ctx.textAlign = obj.originX === 'center' ? 'center' : 'left';
-                    this.ctx.textBaseline = obj.originY === 'center' ? 'middle' : 'top';
-                    
-                    // Draw background highlight if set
-                    if (obj.backgroundColor) {
-                        const metrics = this.ctx.measureText(obj.text);
-                        const padding = obj.padding;
-                        this.ctx.fillStyle = obj.backgroundColor;
-                        this.ctx.fillRect(
-                            obj.left - padding - (obj.originX === 'center' ? metrics.width / 2 : 0),
-                            obj.top - padding - (obj.originY === 'center' ? obj.fontSize / 2 : 0),
-                            metrics.width + padding * 2,
-                            obj.fontSize + padding * 2
-                        );
-                        this.ctx.fillStyle = obj.fill;
-                    }
-                    
-                    this.ctx.fillText(obj.text, obj.left, obj.top);
-                    
-                } else if (obj.type === 'image') {
-                    const width = obj.width * obj.scaleX;
-                    const height = obj.height * obj.scaleY;
-                    let drawX = obj.left;
-                    let drawY = obj.top;
-                    
-                    if (obj.originX === 'center') drawX -= width / 2;
-                    if (obj.originY === 'center') drawY -= height / 2;
-                    if (obj.originY === 'top') drawY = obj.top;
-                    
-                    this.ctx.drawImage(obj._element, drawX, drawY, width, height);
-                    
-                } else if (obj.type === 'polygon') {
-                    this.ctx.fillStyle = obj.fill;
-                    this.ctx.beginPath();
-                    obj.points.forEach((point, index) => {
-                        if (index === 0) {
-                            this.ctx.moveTo(point.x, point.y);
-                        } else {
-                            this.ctx.lineTo(point.x, point.y);
-                        }
-                    });
-                    this.ctx.closePath();
-                    this.ctx.fill();
-                }
-                
-                this.ctx.restore();
-            });
-        };
-        
-        fabric.Canvas.prototype.getActiveObject = function() {
-            return this.activeObject;
-        };
-        
-        fabric.Canvas.prototype.setActiveObject = function(obj) {
-            this.activeObject = obj;
-        };
-        
-        fabric.Canvas.prototype.discardActiveObject = function() {
-            this.activeObject = null;
-        };
-        
-        fabric.Canvas.prototype.toDataURL = function(options = {}) {
-            return this.canvas.toDataURL(options.format || 'image/png', options.quality || 1);
-        };
-    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Roboto:wght@400;500;700;900&family=Montserrat:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fabric.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -203,7 +21,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
@@ -364,6 +182,28 @@
             align-items: center;
         }
 
+        .format-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .format-btn {
+            padding: 8px 12px;
+            border: 2px solid #e1e5e9;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .format-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
         .text-controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -422,18 +262,18 @@
                 <div class="section-title">Headline Text</div>
                 <div class="input-group">
                     <label class="input-label">Headline</label>
-                    <input type="text" id="headline-text" class="input-field" placeholder="Enter headline..." value="AMAZING POSTER">
+                    <input type="text" id="headline-text" class="input-field" placeholder="Enter headline...">
                 </div>
                 <div class="text-controls">
                     <div class="input-group">
                         <label class="input-label">Font</label>
                         <select id="headline-font" class="input-field">
-                            <option value="Arial">Arial</option>
-                            <option value="Helvetica">Helvetica</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Verdana">Verdana</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Playfair Display">Playfair Display</option>
+                            <option value="Oswald">Oswald</option>
+                            <option value="Poppins">Poppins</option>
                         </select>
                     </div>
                     <div class="input-group">
@@ -451,18 +291,18 @@
                 <div class="section-title">Subtitle Text</div>
                 <div class="input-group">
                     <label class="input-label">Subtitle</label>
-                    <input type="text" id="subtitle-text" class="input-field" placeholder="Enter subtitle..." value="Your subtitle here">
+                    <input type="text" id="subtitle-text" class="input-field" placeholder="Enter subtitle...">
                 </div>
                 <div class="text-controls">
                     <div class="input-group">
                         <label class="input-label">Font</label>
                         <select id="subtitle-font" class="input-field">
-                            <option value="Arial">Arial</option>
-                            <option value="Helvetica">Helvetica</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Verdana">Verdana</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Playfair Display">Playfair Display</option>
+                            <option value="Oswald">Oswald</option>
+                            <option value="Poppins">Poppins</option>
                         </select>
                     </div>
                     <div class="input-group">
@@ -526,6 +366,7 @@
         let logoObj = null;
         let headlineObj = null;
         let subtitleObj = null;
+        let isHighlightMode = false;
 
         // Create diagonal borders
         function createDiagonalBorders() {
@@ -565,7 +406,7 @@
 
         // Background color control
         document.getElementById('bg-color').addEventListener('input', (e) => {
-            canvas.setBackgroundColor(e.target.value);
+            canvas.setBackgroundColor(e.target.value, canvas.requestRenderAll.bind(canvas));
         });
 
         // Background image upload
@@ -597,6 +438,7 @@
                         backgroundImageObj = img;
                         canvas.add(img);
                         canvas.sendToBack(img);
+                        canvas.requestRenderAll();
                     });
                 };
                 reader.readAsDataURL(file);
@@ -611,6 +453,7 @@
                     evented: true
                 });
                 canvas.setActiveObject(backgroundImageObj);
+                canvas.requestRenderAll();
             }
         });
 
@@ -621,6 +464,7 @@
                     evented: true
                 });
                 canvas.setActiveObject(backgroundImageObj);
+                canvas.requestRenderAll();
             }
         });
 
@@ -657,6 +501,7 @@
                         logoObj = img;
                         canvas.add(img);
                         canvas.bringToFront(img);
+                        canvas.requestRenderAll();
                     });
                 };
                 reader.readAsDataURL(file);
@@ -691,6 +536,8 @@
                 canvas.add(headlineObj);
                 canvas.bringToFront(headlineObj);
             }
+            
+            canvas.requestRenderAll();
         }
 
         document.getElementById('headline-text').addEventListener('input', updateHeadline);
@@ -725,6 +572,8 @@
                 canvas.add(subtitleObj);
                 canvas.bringToFront(subtitleObj);
             }
+            
+            canvas.requestRenderAll();
         }
 
         document.getElementById('subtitle-text').addEventListener('input', updateSubtitle);
@@ -761,6 +610,7 @@
         document.getElementById('download-png').addEventListener('click', () => {
             // Temporarily deselect all objects for clean export
             canvas.discardActiveObject();
+            canvas.requestRenderAll();
             
             const link = document.createElement('a');
             link.download = 'poster.png';
@@ -774,6 +624,7 @@
         document.getElementById('download-jpeg').addEventListener('click', () => {
             // Temporarily deselect all objects for clean export
             canvas.discardActiveObject();
+            canvas.requestRenderAll();
             
             const link = document.createElement('a');
             link.download = 'poster.jpg';
@@ -784,9 +635,8 @@
             link.click();
         });
 
-        // Initialize with default text
-        updateHeadline();
-        updateSubtitle();
+        // Initial setup
+        canvas.requestRenderAll();
     </script>
 </body>
 </html>
